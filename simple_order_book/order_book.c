@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 typedef struct No {
-	int identificador;
+	int identificador;//cotação por empresa
 	int operacao;//1 == venda; 2 == compra;
     int acoes;
     float preco;
@@ -13,9 +13,16 @@ struct No *cabecote = NULL;
 
 
 void criar_sessao();
-int comprar_acoes(int comprar);
-int vender_acoes(int vender);
-int listar_ofertas(int listar);
+void inserir_ofertas();
+void comprar_acoes(int comprar, int operacao, int identificador);
+void vender_acoes(int vender, int operacao, int identificador);
+void listar_ofertas(int listar);
+void ordenar_compras(int comprar, int operacao, int identificador);
+void ordenar_vendas(int vender, int operacao, int identificador);
+void negociar_ofertas(int vender, int comprar, int operacao, int identificador);
+
+
+criar_sessao();
 
 int main(void){
 
@@ -27,12 +34,16 @@ int main(void){
 		printf("\n1 - Comprar ações\n");
 		printf("\n2 - Vender ações\n");
 		printf("\n3 - Listar ofertas\n");
-		printf("\n4 - Sair\n");
+		printf("\n4 - Inserir ofertas\n");
+		printf("\n5 - Sair\n");
 		scanf("%d",&escolher);
 		switch(escolher){
 
 			case 1:
 			int comprar;
+			int identificador = 0;
+			int operacao = 0;
+
 			while(comprar != 4){
 				printf("\n1 - GOGL34\n");
 				printf("\n2 - FBOK34\n");
@@ -42,13 +53,19 @@ int main(void){
 				switch(comprar){
 
 					case 1:
-					comprar_acoes(comprar);
+					operacao = 1;
+					identificador = 1;
+					comprar_acoes(comprar, operacao, identificador);
 					break;
 					case 2:
-					comprar_acoes(comprar);
+					operacao = 1;
+					identificador = 2;
+					comprar_acoes(comprar, operacao, identificador);
 					break;
 					case 3:
-					comprar_acoes(comprar);
+					operacao = 1;
+					identificador = 3;
+					comprar_acoes(comprar, operacao, identificador);
 					break;
 					case 4:
 					break;
@@ -69,12 +86,19 @@ int main(void){
 				switch(vender){
 
 					case 1:
-					vender_acoes(vender);
+					operacao = 2;
+					identificador = 1;
+					vender_acoes(vender, operacao, identificador);
 					break;
 					case 2:
-					vender_acoes(vender);
+					operacao = 2;
+					identificador = 2;
+					vender_acoes(vender, operacao, identificador);
 					break;
 					case 3:
+					operacao = 2;
+					identificador = 3;
+					vender_acoes(vender, operacao, identificador);
 					vender_acoes(vender);
 					break;
 					case 4:
@@ -113,6 +137,9 @@ int main(void){
 			}
 			break;
 			case 4:
+			inserir_ofertas();
+			break;
+			case 5:
 			exit(0);
 			break;
 			default:
@@ -164,10 +191,269 @@ void criar_sessao(){
 	}
 }
 
+void inserir_ofertas()
+{
+        struct node *temp;
+        temp = (struct node *)malloc(sizeof(struct node));
+
+        if(temp == NULL){
+			printf("Espaço fora da memória.");
+			return;
+		}
+
+        int operacao;
+        int identificador;
+
+        printf("\nDeseja inserir uma compra ou uma venda?\n1 - venda;\n2 - compra");
+        scanf("%d", &temp->operacao );
+
+        while(temp->operacao != 1 && temp->operacao !=2){
+
+			printf("\nOpção inválida.");
+			printf("\nDeseja inserir uma compra ou uma venda?\n1 - venda;\n2 - compra");
+			scanf("%d", &temp->operacao );
+
+        }
+
+        if(temp->operacao  == 1){
+
+        	printf("De qual cotação deseja comprar?");
+        	printf("\n1 - GOGL34");
+			printf("\n2 - FBOK34");
+			printf("\n3 - AMZO34\n");
+			scanf("%d", &temp->identificador);
+
+			while(temp->identificador != 1 && temp->identificador != 2 && temp->identificador != 3){
+
+				printf("\nOpção inválida.");
+				printf("De qual cotação deseja comprar?");
+				printf("\n1 - GOGL34");
+				printf("\n2 - FBOK34");
+				printf("\n3 - AMZO34\n");
+				scanf("%d", &temp->identificador);
+
+			}
+
+			printf("Qual o preço de compra das ações?\n");
+			scanf("%f",&temp->preco);
+
+			while(temp->preco < 0){
+
+				printf("\nValor deve ser positivo.");
+				printf("Qual o preço de compra das ações?\n");
+				scanf("%f",&temp->preco);
+
+			}
+
+			printf("Quantas ações pelo preço informado?\n");
+			scanf("%d",&temp->acoes);
+
+			while(temp->acoes < 0){
+
+				printf("\nValor deve ser positivo.");
+				printf("Quantas ações pelo preço informado?\n");
+				scanf("%f",&temp->acoes);
+
+			}
+
+        }else{
+        	printf("De qual cotação deseja vender?");
+			printf("\n1 - GOGL34");
+			printf("\n2 - FBOK34");
+			printf("\n3 - AMZO34\n");
+			scanf("%d", &temp->identificador);
+
+			while(temp->identificador != 1 && temp->identificador != 2 && temp->identificador != 3){
+
+				printf("\nOpção inválida.");
+				printf("De qual cotação deseja vender?");
+				printf("\n1 - GOGL34");
+				printf("\n2 - FBOK34");
+				printf("\n3 - AMZO34\n");
+				scanf("%d", &temp->identificador);
+
+			}
+
+			printf("Qual o preço de venda das ações?\n");
+			scanf("%f",&temp->preco);
+
+			while(temp->preco < 0){
+
+				printf("\nValor deve ser positivo.");
+				printf("Qual o preço de venda das ações?\n");
+				scanf("%f",&temp->preco);
+
+			}
+
+			printf("Quantas ações pelo preço informado?\n");
+			scanf("%d",&temp->acoes);
+
+			while(temp->acoes < 0){
+
+				printf("\nValor deve ser positivo.");
+				printf("Quantas ações pelo preço informado?\n");
+				scanf("%f",&temp->acoes);
+
+			}
+
+        }
+
+        temp->next = NULL;
+
+        if(cabecote == NULL){
+        	cabecote = temp;
+        }else{
+			temp->next = cabecote;
+			cabecote = temp;
+        }
+
+
+}
+
+
+void comprar_acoes(int comprar, int operacao, int identificador){//insere no começo
+
+		struct node *temp;
+		temp = (struct node *)malloc(sizeof(struct node));
+
+		if(temp == NULL){
+			printf("Espaço fora da memória.");
+			return;
+		}
+
+		temp->identificador = identificador;
+		temp->operacao = operacao;
+
+		printf("Qual o preço de compra das ações?\n");
+		scanf("%d",&temp->preco);
+		printf("Quantas ações pelo preço informado?\n");
+		scanf("%d",&temp->acoes);
+
+		temp->prox = NULL;
+
+		if(cabecote == NULL){
+			cabecote = temp;
+		}else{
+			temp->prox = cabecote;
+			cabecote = temp;
+		}
+
+		ordenar_compras(comprar, operacao);
+
+
+}
+
+void vender_acoes(int vender, int operacao, int identificador){//insere no começo
+
+		struct node *temp;
+		temp = (struct node *)malloc(sizeof(struct node));
+
+		if(temp == NULL){
+			printf("Espaço fora da memória.");
+			return;
+		}
+
+		temp->identificador = identificador;
+		temp->operacao = operacao;
+
+		printf("Qual o preço de venda das ações?\n");
+		scanf("%d",&temp->preco);
+		printf("Quantas ações pelo preço informado?\n");
+		scanf("%d",&temp->acoes);
+
+		temp->prox = NULL;
+
+		if(cabecote == NULL){
+			cabecote = temp;
+		}else{
+			temp->prox = cabecote;
+			cabecote = temp;
+		}
+
+		ordenar_vendas(vender, operacao);
+
+}
+
+
+void ordenar_compras(int comprar, int operacao){
+	//O nó atual vai apontar para o cabeçote
+	struct node *atual = cabecote, *indice = NULL;
+	int temp_preco;
+	int temp_acoes;
+	int temp_id;
+
+	if(cabecote == NULL) {
+		return;
+	}else{
+		while(atual != NULL) {
+			//O índice do nó vai apontar para o nó próximo ao atual
+			indice = atual->prox;
+
+			while(indice != NULL) {
+				//Se os dados do nó atual forem menores que os dados do nó do índice, troque os dados entre eles
+				if((atual->preco < indice->preco) && atual->operacao == 2) {
+
+					temp_preco = indice->preco;
+					indice->preco = atual->preco;
+					atual->preco = temp_preco;
+
+					temp_acoes = indice->acoes;
+					indice->acoes  = atual->acoes;
+					atual->acoes = temp_acoes;
+
+					temp_id = indice->identificador;
+					indice->identificador =  atual->identificador;
+					atual->identificador = temp_id;
+				}
+				indice = indice->prox;
+			}
+			atual = atual->prox;
+		}
+	}
+}
+
+
+
+void ordenar_vendas(int comprar, int operacao){
+	//O nó atual vai apontar para o cabeçote
+	struct node *atual = cabecote, *indice = NULL;
+	int temp_preco;
+	int temp_acoes;
+	int temp_id;
+
+	if(cabecote == NULL) {
+		return;
+	}else{
+		while(atual != NULL) {
+			//O índice do nó vai apontar para o nó próximo ao atual
+			indice = atual->prox;
+
+			while(indice != NULL) {
+				//Se os dados do nó atual forem menores que os dados do nó do índice, troque os dados entre eles
+				if((atual->preco > indice->preco) && atual->operacao == 2) {
+
+					temp_preco = atual->preco;
+					atual->preco = indice->preco;
+					indice->preco = temp_preco;
+
+					temp_acoes = atual->acoes;
+					atual->acoes = indice->acoes;
+					indice->acoes = temp_acoes;
+
+					temp_id = atual->identificador ;
+					atual->identificador = indice->identificador;
+					indice->identificador = temp_id;
+				}
+				indice = indice->prox;
+			}
+			atual = atual->prox;
+		}
+	}
+}
 
 void listar_ofertas(){
 
-	/*struct No *ptr;
+	struct No *ptr;
 
 	if(cabecote == NULL){
 
@@ -182,16 +468,16 @@ void listar_ofertas(){
 
 			if(ptr->prox == NULL){
 
-				printf("[ %d | NULL ]\n",ptr->conteudo );
-				ptr=ptr->prox;
+				//printf("[ %d | NULL ]\n",ptr->conteudo );
+				//ptr=ptr->prox;
 
 			}else{
 
-				printf("[ %d | %p ]--->",ptr->conteudo, ptr->prox);
-				ptr = ptr->prox;
+				//printf("[ %d | %p ]--->",ptr->conteudo, ptr->prox);
+				//ptr = ptr->prox;
 
 			}
 		}
-	}*/
+	}
 }
 
