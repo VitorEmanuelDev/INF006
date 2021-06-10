@@ -1,94 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct No {
-	int identificador;//cotação por empresa
-	int operacao;//1 == venda; 2 == compra;
-    int acoes;
-    float preco;
-    struct No *proximo;
-    struct No *anterior;
-} No;
+#include "order_book.h"
 
-struct No *cabecote, *cauda = NULL;
+void persistir_ofertas(No *cabecote){
 
-void finalizar_sessao(No *cabecote, No *cauda);
-void inserir_ofertas();
-void listar_compras(int identificador);
-void listar_vendas(int identificador);
-void ordenar_lista();
+	FILE *arquivo;
+
+	arquivo = fopen("ofertas.txt", "wb");
+
+	if(arquivo){
 
 
-
-int main(void){
-
-	int escolher;
-	int identificador;
-
-	while(1){
-
-		printf("Bem vindo ao OrderBook\n");
-		printf("\n1 - Listar ofertas\n");
-		printf("\n2 - Inserir ofertas\n");
-		printf("\n3 - Sair\n");
-		scanf("%d",&escolher);
-		switch(escolher){
-
-			case 1:
-
-			while(identificador != 4){
-				printf("Quais açoões deseja listar?\n");
-				printf("\n1 - GOGL34\n");
-				printf("\n2 - FBOK34\n");
-				printf("\n3 - AMZO34\n");
-				printf("\n4 - Voltar\n");
-				scanf("%d",&identificador);
-				switch(identificador){
-
-					case 1:
-					listar_compras(identificador);
-					break;
-					case 2:
-					listar_compras(identificador);
-					break;
-					case 3:
-					listar_compras(identificador);
-					break;
-					case 4:
-					break;
-					default:
-					printf("Escolha Inválida.");
-					break;
-				}
-			}
-			break;
-			case 2:
-			inserir_ofertas();
-			break;
-			case 3:
-			finalizar_sessao(cabecote, cauda);
-			exit(0);
-			break;
-			default:
-			printf("Escolha Inválida.");
-			break;
-		}
 	}
-	return 0;
 
 }
 
-
-void finalizar_sessao(No *cabecote, No *cauda)
+void finalizar_sessao()
 {
      No *temp;
      while(cabecote != NULL){
           temp = cabecote;
           cabecote = cabecote->proximo;
           free(temp);
-          temp = cauda;
-		  cauda = cauda->anterior;
-		  free(temp);
      }
 }
 
@@ -102,21 +36,22 @@ void inserir_ofertas()
 			return;
 		}
 
-        printf("\nDeseja inserir uma compra ou uma venda?\n1 - venda\n2 - compra");
-        scanf("%d", &temp->operacao);
 
-        while(temp->operacao != 1 && temp->operacao !=2){
+		printf("\nDeseja inserir uma compra ou uma venda?\n1 - venda\n2 - compra");
+		scanf("%d", &temp->operacao);
+
+		while(temp->operacao != 1 && temp->operacao != 2){
 
 			printf("\nOpção inválida.");
 			printf("\nDeseja inserir uma compra ou uma venda?\n1 - venda\n2 - compra");
 			scanf("%d", &temp->operacao );
 
-        }
+		}
 
-        if(temp->operacao  == 1){
+		if(temp->operacao  == 1){
 
-        	printf("De qual cotação deseja vender?");
-        	printf("\n1 - GOGL34");
+			printf("De qual cotação deseja vender?");
+			printf("\n1 - GOGL34");
 			printf("\n2 - FBOK34");
 			printf("\n3 - AMZO34\n");
 			scanf("%d", &temp->identificador);
@@ -154,8 +89,8 @@ void inserir_ofertas()
 
 			}
 
-        }else{
-        	printf("De qual cotação deseja comprar?");
+		}else{
+			printf("De qual cotação deseja comprar?");
 			printf("\n1 - GOGL34");
 			printf("\n2 - FBOK34");
 			printf("\n3 - AMZO34\n");
@@ -194,16 +129,34 @@ void inserir_ofertas()
 
 			}
 
-        }
+		}
 
-        temp->proximo = NULL;
+		//Se a lista estiver vazia
+		if(cabecote == NULL) {
 
-        if(cabecote == NULL){
-        	cabecote = temp;
-        }else{
-			temp->proximo = cabecote;
-			cabecote = temp;
-        }
+			// Tanto a cabeça quanto a cauda apontarão para temp o que será o novo nó
+			cabecote = cauda = temp;
+
+			// o anterior da cabeça apontará para NULL
+			cabecote->anterior = NULL;
+
+			// o próximo da cauda apontará para NULL, pois é o último nó da lista
+			cauda->proximo = NULL;
+
+		}else {
+
+			// temp será adicionado após a cauda de modo que a próxima cauda aponte para temp
+			cauda->proximo = temp;
+
+			// o anterior de temp apontará para a cauda
+			temp->anterior = cauda;
+
+			// temp se tornará uma nova cauda
+			cauda = temp;
+
+			// Como é o último nó, o próximo nó da cauda apontará para NULL
+			cauda->proximo = NULL;
+		}
 
         ordenar_lista();
 
@@ -213,51 +166,48 @@ void inserir_ofertas()
 void ordenar_lista(){
 	//O nó atual vai apontar para o cabeçote
 	struct No *atual = cabecote, *indice = NULL;
-	int temp_preco;
-	int temp_acoes;
-	int temp_id;
-	int temp_op;
+
+	int temp;
 
 	if(cabecote == NULL) {
+
 		return;
+
 	}else{
-		while(atual != NULL) {
+
+		for(atual = cabecote; atual->proximo != NULL; atual = atual->proximo) {
 			//O índice do nó vai apontar para o nó próximo ao atual
 			indice = atual->proximo;
 
-			while(indice != NULL) {
+			for(indice = atual->proximo; indice != NULL; indice = indice->proximo) {
 				//Se os dados do nó atual forem menores que os dados do nó do índice, troque os dados entre eles
 				if(atual->preco > indice->preco) {
 
-					temp_preco = atual->preco;
+					temp = atual->preco;
 					atual->preco = indice->preco;
-					indice->preco = temp_preco;
+					indice->preco = temp;
 
-					temp_acoes = atual->acoes;
+					temp = atual->acoes;
 					atual->acoes  = indice->acoes;
-					indice->acoes = temp_acoes;
+					indice->acoes = temp;
 
-					temp_id = atual->identificador;
+					temp = atual->identificador;
 					atual->identificador =  indice->identificador;
-					indice->identificador = temp_id;
+					indice->identificador = temp;
 
-					temp_op = atual->operacao;
+					temp = atual->operacao;
 					atual->operacao =  indice->operacao;
-					indice->operacao = temp_op;
+					indice->operacao = temp;
 
 				}
 
-				indice = indice->proximo;
-
 			}
-
-			atual = atual->proximo;
 
 		}
 	}
 }
 
-void listar_compras(int identificador) {
+void listar_ofertas(int identificador) {
     //Nó atual vai apontar para o cabecote
     struct No *atual = cabecote;
 
@@ -266,39 +216,22 @@ void listar_compras(int identificador) {
         return;
     }
 
-    printf("___________\n");
-    printf("| COMPRA  |\n");
+    		printf("_________________________\n");
+    		printf("|       | Ações | Preços |\n");
     while(atual != NULL) {
 
-     	if(atual->identificador == identificador && atual->operacao == 1){
- 			printf("___________\n");
- 			printf("|%d |%.2f |\n", atual->acoes, atual->preco);
- 			atual = atual->proximo;
-     	}
-     }
+		if(atual->identificador == identificador && atual->operacao == 1){
+			printf("_________________________\n");
+			printf("| VENDA | %d | %.2f |\n", atual->acoes, atual->preco);
+			atual = atual->proximo;
+		}
 
-    listar_vendas(identificador);
-
-}
-
-void listar_vendas(int identificador) {
-    //Nó atual vai apontar para o cabecote
-    struct No *temp = cauda;
-
-    printf("___________\n");
-    printf("|  VENDA  |\n");
-    while(temp != NULL) {
-
-    	if(temp->identificador == identificador && temp->operacao == 2){
-
-    		printf("|___________|\n");
-			printf("|%d|%.2f|\n", temp->acoes, temp->preco);
-			temp = temp->anterior;
-    	}
-    }
-
-    main();
+		if(atual->identificador == identificador && atual->operacao == 2){
+			printf("_________________________\n");
+			printf("|COMPRA | %d | %.2f |\n", atual->acoes, atual->preco);
+			atual = atual->proximo;
+		}
+	}
 
 }
-
 
