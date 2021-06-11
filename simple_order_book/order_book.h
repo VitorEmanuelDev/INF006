@@ -1,3 +1,6 @@
+#ifndef ORDER_BOOK_H_
+#define ORDER_BOOK_H_
+
 
 typedef struct No {
 	int identificador;//cotação por empresa
@@ -5,13 +8,13 @@ typedef struct No {
     int acoes;
     float preco;
     struct No *proximo;
-    struct No *anterior;
 } No;
-
-struct No *cabecote, *cauda = NULL;
 
 void finalizar_sessao();
 void inserir_ofertas();
-void listar_ofertas(int identificador);
+void listar_ofertas();
 void ordenar_lista();
-void persistir_lista();
+void negociar_ofertas();
+void eliminar_ofertas(int posicao);
+
+#endif

@@ -1,9 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define VENDA 1
+#define COMPRA 2
+
+#define GOGL34 1
+#define FBOK34 2
+#define AMZO34 3
+
 #include "order_book.h"
 
-void persistir_ofertas(No *cabecote){
+struct No *cabecote, *cauda = NULL;
+
+
+/*void persistir_ofertas(No *cabecote){
 
 	FILE *arquivo;
 
@@ -14,7 +24,7 @@ void persistir_ofertas(No *cabecote){
 
 	}
 
-}
+}*/
 
 void finalizar_sessao()
 {
@@ -37,18 +47,18 @@ void inserir_ofertas()
 		}
 
 
-		printf("\nDeseja inserir uma compra ou uma venda?\n1 - venda\n2 - compra");
+		printf("\nDeseja inserir uma compra ou uma venda?\n1 - Venda\n2 - Compra");
 		scanf("%d", &temp->operacao);
 
-		while(temp->operacao != 1 && temp->operacao != 2){
+		while(temp->operacao != COMPRA && temp->operacao != VENDA){
 
 			printf("\nOpção inválida.");
-			printf("\nDeseja inserir uma compra ou uma venda?\n1 - venda\n2 - compra");
+			printf("\nDeseja inserir uma compra ou uma venda?\n1 - Venda\n2 - Compra");
 			scanf("%d", &temp->operacao );
 
 		}
 
-		if(temp->operacao  == 1){
+		if(temp->operacao  == VENDA){
 
 			printf("De qual cotação deseja vender?");
 			printf("\n1 - GOGL34");
@@ -56,7 +66,7 @@ void inserir_ofertas()
 			printf("\n3 - AMZO34\n");
 			scanf("%d", &temp->identificador);
 
-			while(temp->identificador != 1 && temp->identificador != 2 && temp->identificador != 3){
+			while(temp->identificador != GOGL34 && temp->identificador != FBOK34 && temp->identificador != AMZO34){
 
 				printf("\nOpção inválida.");
 				printf("De qual cotação deseja vender?");
@@ -96,7 +106,7 @@ void inserir_ofertas()
 			printf("\n3 - AMZO34\n");
 			scanf("%d", &temp->identificador);
 
-			while(temp->identificador != 1 && temp->identificador != 2 && temp->identificador != 3){
+			while(temp->identificador != GOGL34 && temp->identificador != FBOK34 && temp->identificador != AMZO34){
 
 				printf("\nOpção inválida.");
 				printf("De qual cotação deseja comprar?");
@@ -131,31 +141,12 @@ void inserir_ofertas()
 
 		}
 
-		//Se a lista estiver vazia
 		if(cabecote == NULL) {
-
-			// Tanto a cabeça quanto a cauda apontarão para temp o que será o novo nó
-			cabecote = cauda = temp;
-
-			// o anterior da cabeça apontará para NULL
-			cabecote->anterior = NULL;
-
-			// o próximo da cauda apontará para NULL, pois é o último nó da lista
-			cauda->proximo = NULL;
-
-		}else {
-
-			// temp será adicionado após a cauda de modo que a próxima cauda aponte para temp
-			cauda->proximo = temp;
-
-			// o anterior de temp apontará para a cauda
-			temp->anterior = cauda;
-
-			// temp se tornará uma nova cauda
+			cabecote = temp;
 			cauda = temp;
-
-			// Como é o último nó, o próximo nó da cauda apontará para NULL
-			cauda->proximo = NULL;
+		}else {
+			cauda->proximo = temp;
+			cauda = temp;
 		}
 
         ordenar_lista();
@@ -175,12 +166,12 @@ void ordenar_lista(){
 
 	}else{
 
-		for(atual = cabecote; atual->proximo != NULL; atual = atual->proximo) {
-			//O índice do nó vai apontar para o nó próximo ao atual
+		while(atual != NULL) {
+
 			indice = atual->proximo;
 
-			for(indice = atual->proximo; indice != NULL; indice = indice->proximo) {
-				//Se os dados do nó atual forem menores que os dados do nó do índice, troque os dados entre eles
+			while(indice != NULL) {
+
 				if(atual->preco > indice->preco) {
 
 					temp = atual->preco;
@@ -200,38 +191,286 @@ void ordenar_lista(){
 					indice->operacao = temp;
 
 				}
-
+				indice = indice->proximo;
 			}
-
+			atual = atual->proximo;
 		}
 	}
 }
 
-void listar_ofertas(int identificador) {
+void listar_ofertas() {
     //Nó atual vai apontar para o cabecote
     struct No *atual = cabecote;
 
     if(cabecote == NULL) {
-        printf("Lista vazia \n");
-        return;
-    }
+		printf("Lista vazia \n");
+		return;
+	}
 
-    		printf("_________________________\n");
-    		printf("|       | Ações | Preços |\n");
+    		printf("**************************** BOOK DE PRECOS ***********************************");
     while(atual != NULL) {
 
-		if(atual->identificador == identificador && atual->operacao == 1){
-			printf("_________________________\n");
-			printf("| VENDA | %d | %.2f |\n", atual->acoes, atual->preco);
+		if(atual->identificador == GOGL34 && atual->operacao == VENDA){
+			printf("                                        _____________________________________\n");
+			printf("                                        | GOGL34 | VENDA | %d | %.2f |\n", atual->acoes, atual->preco);
 			atual = atual->proximo;
 		}
 
-		if(atual->identificador == identificador && atual->operacao == 2){
-			printf("_________________________\n");
-			printf("|COMPRA | %d | %.2f |\n", atual->acoes, atual->preco);
+		if(atual->identificador == GOGL34 && atual->operacao == COMPRA){
+			printf("_____________________________________\n");
+			printf("| GOGL34 | COMPRA | %d | %.2f |\n", atual->acoes, atual->preco);
+			atual = atual->proximo;
+		}
+
+		if(atual->identificador == FBOK34 && atual->operacao == VENDA){
+			printf("                                        _____________________________________\n");
+			printf("                                        | FBOK34 | VENDA | %d | %.2f |\n", atual->acoes, atual->preco);
+			atual = atual->proximo;
+		}
+
+		if(atual->identificador == FBOK34 && atual->operacao == COMPRA){
+			printf("_____________________________________\n");
+			printf("| FBOK34 | COMPRA | %d | %.2f |\n", atual->acoes, atual->preco);
+			atual = atual->proximo;
+		}
+		if(atual->identificador == AMZO34 && atual->operacao == VENDA){
+			printf("                                        _____________________________________\n");
+			printf("                                        | AMZO34 | VENDA | %d | %.2f |\n", atual->acoes, atual->preco);
+			atual = atual->proximo;
+		}
+
+		if(atual->identificador == AMZO34 && atual->operacao == COMPRA){
+			printf("_____________________________________\n");
+			printf("| AMZO34 | COMPRA | %d | %.2f |\n", atual->acoes, atual->preco);
 			atual = atual->proximo;
 		}
 	}
 
+    int decisao;
+
+	printf("\n1 - Listar ofertas novamente\n2 - Informar nova oferta\n3 - Negociar ofertas\n4 - Sair do programa\n");
+	scanf("%d", &decisao);
+	while(1){
+
+		switch(decisao){
+
+			case 1:
+			listar_ofertas();
+			break;
+			case 2:
+			inserir_ofertas();
+			break;
+			case 3:
+			negociar_ofertas();
+			break;
+			case 4:
+			finalizar_sessao();
+			exit(0);
+			break;
+			default:
+			printf("Escolha Inválida.");
+			break;
+		}
+
+	}
+
 }
 
+void negociar_ofertas(){
+	//O nó atual vai apontar para o cabeçote
+	struct No *atual = cabecote, *indice = NULL;
+
+	if(cabecote == NULL) {
+
+		return;
+
+	}else{
+
+		int posicao_compra = 0,posicao_venda = 0;
+
+		while(atual != NULL) {
+
+			indice = atual->proximo;
+
+			while(indice != NULL) {
+
+				if((atual->preco == indice->preco) &&
+				   (atual->acoes <= indice->acoes) &&
+				   (atual->identificador == indice->identificador) &&
+				   (atual->operacao == COMPRA && indice->operacao == VENDA)) {
+
+					char decisao;
+
+					if(atual->identificador == GOGL34){
+						printf("Deseja realizar esta compra? (s/n)\n");
+						printf("_______________________________________________________________________\n");
+						printf("| GOGL34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
+						scanf("%c", &decisao);
+
+						while(decisao != 'y' && decisao != 'n'){
+
+							printf("Opção inválida.\n");
+							printf("Deseja realizar esta compra? (s/n)\n");
+							printf("_______________________________________________________________________\n");
+							printf("| GOGL34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
+							scanf("%c", &decisao);
+
+							if(decisao == 'y'){
+								printf("Cotação GOGL34:");
+								printf("_______________________________________________________________________\n");
+								printf("| GOGL34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
+
+								indice->acoes = indice->acoes - atual->acoes;
+
+								if(indice->acoes == 0){
+
+									eliminar_ofertas(posicao_venda);
+
+								}
+
+								if(atual->acoes == 0){
+
+									eliminar_ofertas(posicao_compra);
+
+								}
+
+							}
+
+							if(decisao == 'n'){
+
+								break;
+
+							}
+
+						}
+					}
+					if(atual->identificador == FBOK34){
+
+						printf("Deseja realizar esta compra?\n");
+						printf("_______________________________________________________________________\n");
+						printf("| FBOK34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
+						while(decisao != 'y' && decisao != 'n'){
+
+							printf("Opção inválida.\n");
+							printf("Deseja realizar esta compra? (s/n)\n");
+							printf("_______________________________________________________________________\n");
+							printf("| FBOK34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
+							scanf("%c", &decisao);
+
+							if(decisao == 'y'){
+								printf("Cotação FBOK34:");
+								printf("_______________________________________________________________________\n");
+								printf("| FBOK34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
+
+								indice->acoes = indice->acoes - atual->acoes;
+
+								if(indice->acoes == 0){
+
+									eliminar_ofertas(posicao_venda);
+
+								}
+
+								if(atual->acoes == 0){
+
+									eliminar_ofertas(posicao_compra);
+
+								}
+
+							}
+
+							if(decisao == 'n'){
+
+								break;
+
+							}
+						}
+					}
+					if(atual->identificador == AMZO34){
+
+						printf("Deseja realizar esta compra?\n");
+						printf("_______________________________________________________________________\n");
+						printf("| AMZO34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
+						scanf("%c", &decisao);
+						while(decisao != 'y' && decisao != 'n'){
+
+							printf("Opção inválida.\n");
+							printf("Deseja realizar esta compra? (s/n)\n");
+							printf("_______________________________________________________________________\n");
+							printf("| AMZO34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
+							scanf("%c", &decisao);
+
+							if(decisao == 'y'){
+								printf("Cotação AMZO34:");
+								printf("_______________________________________________________________________\n");
+								printf("| AMZO34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
+
+								indice->acoes = indice->acoes - atual->acoes;
+
+								if(indice->acoes == 0){
+
+									eliminar_ofertas(posicao_venda);
+
+								}
+
+								if(atual->acoes == 0){
+
+									eliminar_ofertas(posicao_compra);
+
+								}
+
+							}
+
+							if(decisao == 'n'){
+
+								break;
+
+							}
+						}
+					}
+
+				}
+
+			}
+			posicao_venda++;
+			indice = indice->proximo;
+		}
+		posicao_compra++;
+		atual = atual->proximo;
+	}
+}
+
+
+void eliminar_ofertas(int posicao){
+
+	struct No *temp,*ptr;
+
+	if(cabecote == NULL){
+
+		printf("Lista vazia");
+		return;
+
+	}else{
+
+		if(posicao == 0){
+
+			ptr = cabecote;
+			cabecote = cabecote->proximo ;
+			free(ptr);
+
+		}else{
+			ptr = cabecote;
+			for(int i = 0; i < posicao; i++) {
+				temp = ptr;
+				ptr = ptr->proximo ;
+
+				if(ptr == NULL){
+					printf("Posição não encontrada.\n");
+					return;
+				}
+			}
+			temp->proximo = ptr->proximo ;
+			free(ptr);
+		}
+	}
+
+}
