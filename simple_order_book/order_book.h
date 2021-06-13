@@ -8,6 +8,7 @@ typedef struct No {
     int acoes;
     float preco;
     struct No *proximo;
+    struct No *anterior;
 } No;
 
 void finalizar_sessao();
@@ -16,5 +17,7 @@ void listar_ofertas();
 void ordenar_lista();
 void negociar_ofertas();
 void eliminar_ofertas(int posicao);
+//void persistir_ofertas(No *cabecote);
+//No *listar_arquivo(No *cabecote, FILE *arquivo);
 
 #endif

@@ -9,7 +9,7 @@ int main(void){
 
 	while(1){
 
-		printf("Bem vindo ao OrderBook\n");
+		printf("\nBem vindo ao OrderBook\n");
 		printf("\n1 - Listar ofertas\n");
 		printf("\n2 - Inserir ofertas\n");
 		printf("\n3 - Negociar ofertas\n");
