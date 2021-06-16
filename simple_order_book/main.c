@@ -8,12 +8,11 @@ int main(void){
 	int escolher;
 
 	while(1){
-
 		printf("\nBem vindo ao OrderBook\n");
-		printf("\n1 - Listar ofertas\n");
-		printf("\n2 - Inserir ofertas\n");
-		printf("\n3 - Negociar ofertas\n");
-		printf("\n4 - Sair\n");
+		printf("\n1 - Listar ofertas");
+		printf("\n2 - Inserir ofertas");
+		printf("\n3 - Negociar ofertas");
+		printf("\n4 - Sair");
 		scanf("%d",&escolher);
 		switch(escolher){
 
@@ -38,3 +37,5 @@ int main(void){
 	return 0;
 
 }
+
+

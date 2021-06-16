@@ -1,552 +1,663 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define VENDA 1
-#define COMPRA 2
-
-#define GOGL34 1
-#define FBOK34 2
-#define AMZO34 3
-
 #include "order_book.h"
 
-struct No *cabecote, *cauda = NULL;
+struct Compra *cabecote_compra = NULL;
+struct Venda *cabecote_venda = NULL;
 
-void finalizar_sessao()
-{
-     No *temp;
-     while(cabecote != NULL){
-          temp = cabecote;
-          cabecote = cabecote->proximo;
-          free(temp);
+void finalizar_sessao(){
+     Compra *temp_compra;
+     while(cabecote_compra != NULL){
+    	 temp_compra = cabecote_compra;
+    	 cabecote_compra = cabecote_compra->proxima_compra;
+          free(temp_compra);
      }
+
+     Venda *temp_venda;
+	 while(cabecote_venda != NULL){
+		 temp_venda = cabecote_venda;
+		  cabecote_venda = cabecote_venda->proxima_venda;
+		  free(temp_venda);
+	 }
+}
+
+void menu(){
+
+	int decisao;
+
+	printf("\n1 - Listar ofertas\n2 - Informar nova oferta\n3 - Negociar ofertas\n4 - Sair\n");
+	scanf("%d", &decisao);
+	while(1){
+
+		switch(decisao){
+
+			case 1:
+			listar_ofertas();
+			break;
+			case 2:
+			inserir_ofertas();
+			break;
+			case 3:
+			negociar_ofertas();
+			break;
+			case 4:
+			finalizar_sessao();
+			exit(0);
+			break;
+			default:
+			printf("Escolha Inválida.");
+			break;
+		}
+
+	}
+
 }
 
 void inserir_ofertas(){
-        struct No *temp;
-        temp = (struct No *)malloc(sizeof(struct No));
 
-        if(temp == NULL){
-			printf("Espaço fora da memória.");
-			return;
-		}
+	int decisao;
+	printf("\nDeseja inserir uma compra ou uma venda?\n1 - Venda\n2 - Compra");
+	scanf("%d", &decisao);
 
+	while(decisao!= COMPRA && decisao != VENDA){
+
+		printf("\nOpção inválida.");
 		printf("\nDeseja inserir uma compra ou uma venda?\n1 - Venda\n2 - Compra");
-		scanf("%d", &temp->operacao);
+		scanf("%d", &decisao );
+	}
 
-		while(temp->operacao != COMPRA && temp->operacao != VENDA){
+	if(decisao == VENDA){
 
-			printf("\nOpção inválida.");
-			printf("\nDeseja inserir uma compra ou uma venda?\n1 - Venda\n2 - Compra");
-			scanf("%d", &temp->operacao );
+		inserir_vendas();
 
-		}
+	}
 
-		if(temp->operacao  == VENDA){
+	if(decisao == COMPRA){
 
-			printf("De qual cotação deseja vender?");
-			printf("\n1 - GOGL34");
-			printf("\n2 - FBOK34");
-			printf("\n3 - AMZO34\n");
-			scanf("%d", &temp->identificador);
+		inserir_compra();
 
-			while(temp->identificador != GOGL34 && temp->identificador != FBOK34 && temp->identificador != AMZO34){
+	}
 
-				printf("\nOpção inválida.");
-				printf("De qual cotação deseja vender?");
-				printf("\n1 - GOGL34");
-				printf("\n2 - FBOK34");
-				printf("\n3 - AMZO34\n");
-				scanf("%d", &temp->identificador);
 
-			}
+}
 
-			printf("Qual o preço de venda das ações?\n");
-			scanf("%f",&temp->preco);
+void inserir_vendas(){
 
-			while(temp->preco < 0){
 
-				printf("\nValor deve ser positivo.");
-				printf("Qual o preço de venda das ações?\n");
-				scanf("%f",&temp->preco);
+	struct Venda *temp,*ptr;
+	temp = (struct Venda *)malloc(sizeof(struct Venda));
 
-			}
+	if(temp == NULL){
+		printf("Espaço fora da memória.");
+		return;
+	}
 
-			printf("Quantas ações pelo preço informado?\n");
-			scanf("%d",&temp->acoes);
 
-			while(temp->acoes < 0){
+	printf("De qual cotação deseja vender?");
+	printf("\n1 - GOGL34");
+	printf("\n2 - FBOK34");
+	printf("\n3 - AMZO34\n");
+	scanf("%d", &temp->papel_venda);
 
-				printf("\nValor deve ser positivo.");
-				printf("Quantas ações pelo preço informado?\n");
-				scanf("%d",&temp->acoes);
+	while(temp->papel_venda != GOGL34 && temp->papel_venda != FBOK34 && temp->papel_venda != AMZO34){
 
-			}
+		printf("\nOpção inválida.");
+		printf("\nDe qual cotação deseja vender?");
+		printf("\n1 - GOGL34");
+		printf("\n2 - FBOK34");
+		printf("\n3 - AMZO34\n");
+		scanf("%d", &temp->papel_venda);
 
-		}else{
-			printf("De qual cotação deseja comprar?");
-			printf("\n1 - GOGL34");
-			printf("\n2 - FBOK34");
-			printf("\n3 - AMZO34\n");
-			scanf("%d", &temp->identificador);
+	}
 
-			while(temp->identificador != GOGL34 && temp->identificador != FBOK34 && temp->identificador != AMZO34){
+	printf("Qual o preço de venda das ações?\n");
+	scanf("%f",&temp->preco_venda);
 
-				printf("\nOpção inválida.");
-				printf("De qual cotação deseja comprar?");
-				printf("\n1 - GOGL34");
-				printf("\n2 - FBOK34");
-				printf("\n3 - AMZO34\n");
-				scanf("%d", &temp->identificador);
+	while(temp->preco_venda < 0){
 
-			}
+		printf("\nValor deve ser positivo.");
+		printf("Qual o preço de venda das ações?\n");
+		scanf("%f",&temp->preco_venda);
 
-			printf("Qual o preço de compra das ações?\n");
-			scanf("%f",&temp->preco);
+	}
 
-			while(temp->preco < 0){
+	printf("Quantas ações pelo preço informado?\n");
+	scanf("%d",&temp->acoes_venda);
 
-				printf("\nValor deve ser positivo.");
-				printf("Qual o preço de compra das ações?\n");
-				scanf("%f",&temp->preco);
+	while(temp->acoes_venda < 0){
 
-			}
+		printf("\nValor deve ser positivo.");
+		printf("Quantas ações pelo preço informado?\n");
+		scanf("%d",&temp->acoes_venda);
 
-			printf("Quantas ações pelo preço informado?\n");
-			scanf("%d",&temp->acoes);
+	}
 
-			while(temp->acoes < 0){
+	temp->proxima_venda = NULL;
 
-				printf("\nValor deve ser positivo.");
-				printf("Quantas ações pelo preço informado?\n");
-				scanf("%d",&temp->acoes);
+	if(cabecote_venda == NULL){
+		cabecote_venda = temp;
+	}else{
+    	ptr = cabecote_venda;
+        while(ptr->proxima_venda != NULL){
+            ptr = ptr->proxima_venda ;
+        }
+        ptr->proxima_venda = temp;
+	}
 
-			}
+    ordenar_vendas();
 
-		}
+}
 
-		// Se a lista estiver vazia
-		if (cabecote == NULL) {
-			// Tanto a cabeça quanto a cauda apontarão para newNode
-			cabecote = cauda = temp;
-			// o anterior do cabeçote apontará para NULL
-			cabecote->anterior = NULL;
-			// o próximo da cauda apontará para NULL, pois é o último nó da lista
-			cauda->proximo = NULL;
-		}else {
-			// temp será adicionado após a cauda de modo que a próxima cauda aponte para temp
-			cauda->proximo = temp;
-			// o anterior de temp apontará para a cauda
-			temp->anterior = cauda;
-			// temp se tornará uma nova cauda
-			cauda = temp;
-			// Como é o último nó, o próximo nó da cauda apontará para NULL
-			cauda->proximo = NULL;
-		}
+void inserir_compra(){
 
-        ordenar_lista();
-       // persistir_ofertas(cabecote);
+	struct Compra *temp,*ptr;
+	temp = (struct Compra *)malloc(sizeof(struct Compra));
+
+	if(temp == NULL){
+		printf("Espaço fora da memória.");
+		return;
+	}
+
+	printf("\nDe qual cotação deseja comprar?");
+	printf("\n1 - GOGL34");
+	printf("\n2 - FBOK34");
+	printf("\n3 - AMZO34\n");
+	scanf("%d", &temp->papel_compra);
+
+	while(temp->papel_compra != GOGL34 && temp->papel_compra != FBOK34 && temp->papel_compra != AMZO34){
+
+		printf("\nOpção inválida.");
+		printf("De qual cotação deseja comprar?");
+		printf("\n1 - GOGL34");
+		printf("\n2 - FBOK34");
+		printf("\n3 - AMZO34\n");
+		scanf("%d", &temp->papel_compra);
+
+	}
+
+	printf("Qual o preço de compra das ações?\n");
+	scanf("%f",&temp->preco_compra);
+
+	while(temp->preco_compra < 0){
+
+		printf("\nValor deve ser positivo.");
+		printf("Qual o preço de compra das ações?\n");
+		scanf("%f",&temp->preco_compra);
+
+	}
+
+	printf("Quantas ações pelo preço informado?\n");
+	scanf("%d",&temp->acoes_compra);
+
+	while(temp->acoes_compra < 0){
+
+		printf("\nValor deve ser positivo.");
+		printf("Quantas ações pelo preço informado?\n");
+		scanf("%d",&temp->acoes_compra);
+
+	}
+
+	temp->proxima_compra = NULL;
+
+	if(cabecote_compra == NULL){
+		cabecote_compra = temp;
+	}else{
+    	ptr = cabecote_compra;
+        while(ptr->proxima_compra != NULL){
+            ptr = ptr->proxima_compra ;
+        }
+        ptr->proxima_compra = temp;
+	}
+
+    ordenar_compras();
 
 }
 
 
-void ordenar_lista(){
+void ordenar_compras(){
 	//O nó atual vai apontar para o cabeçote
-	//struct No *atual = cabecote, *indice = NULL;
+	struct Compra *atual = cabecote_compra, *indice = NULL;
 
-	struct No *atual = NULL, *indice = NULL;
 	int temp;
 
-	if(cabecote == NULL) {
+	if(cabecote_compra == NULL) {
 
 		return;
 
 	}else{
-		//while(indice != NULL) {
+
+		while(atual != NULL) {
 		//O nó atual vai apontar para o cabeçote
-		 for(atual = cabecote; atual->proximo != NULL; atual = atual->proximo) {
 
-			//indice = atual->proximo;
+			indice = atual->proxima_compra;
 
-			//while(indice != NULL) {
-			for(indice = atual->proximo; indice != NULL; indice = indice->proximo) {
+			while(indice != NULL) {
 
-				if(atual->preco > indice->preco) {
+				if(atual->preco_compra < indice->preco_compra) {
 
-					temp = atual->preco;
-					atual->preco = indice->preco;
-					indice->preco = temp;
+					temp = atual->preco_compra;
+					atual->preco_compra = indice->preco_compra;
+					indice->preco_compra = temp;
 
-					temp = atual->acoes;
-					atual->acoes  = indice->acoes;
-					indice->acoes = temp;
+					temp = atual->acoes_compra;
+					atual->acoes_compra  = indice->acoes_compra;
+					indice->acoes_compra = temp;
 
-					temp = atual->identificador;
-					atual->identificador =  indice->identificador;
-					indice->identificador = temp;
-
-					temp = atual->operacao;
-					atual->operacao =  indice->operacao;
-					indice->operacao = temp;
+					temp = atual->papel_compra;
+					atual->papel_compra =  indice->papel_compra;
+					indice->papel_compra = temp;
 
 				}
-				//indice = indice->proximo;
+				indice = indice->proxima_compra;
 			}
-			//atual = atual->proximo;
+			atual = atual->proxima_compra;
 		}
 	}
+	//persistir_compras();
+	menu();
+
 }
 
-No *listar_arquivo(No *cabecote, FILE *arquivo){
 
-	size_t valor;
+void ordenar_vendas(){
 
-	if(cabecote == NULL){
+	//O nó atual vai apontar para o cabeçote
+	struct Venda *atual = cabecote_venda, *indice = NULL;
 
-		cabecote = malloc(sizeof(No));
-		valor = fread(cabecote, sizeof(No), 1, arquivo);
+	int temp;
 
-		cabecote->proximo = NULL;
-		cabecote->anterior;
+	if(cabecote_venda == NULL) {
+
+		return;
 
 	}else{
 
-		No *indice = cabecote;
-		cabecote = malloc(sizeof(No));
-		No *temp = malloc(sizeof(No));
+		while(atual != NULL) {
+		//O nó atual vai apontar para o cabeçote
 
-		while(indice->proximo != NULL){
+			indice = atual->proxima_venda;
 
-			indice = indice->proximo;
+			while(indice != NULL) {
 
+				if(atual->preco_venda > indice->preco_venda) {
+
+					temp = atual->preco_venda;
+					atual->preco_venda = indice->preco_venda;
+					indice->preco_venda = temp;
+
+					temp = atual->acoes_venda;
+					atual->acoes_venda  = indice->acoes_venda;
+					indice->acoes_venda = temp;
+
+					temp = atual->papel_venda;
+					atual->papel_venda =  indice->papel_venda;
+					indice->papel_venda = temp;
+
+				}
+				indice = indice->proxima_venda;
+			}
+			atual = atual->proxima_venda;
 		}
-
-		valor = fread(temp, sizeof(No), 1, arquivo);
-		indice->proximo = temp;
-		temp->proximo = NULL;
-		temp->anterior = indice;
-
 	}
-
-	return cabecote;
+	//persistir_vendas();
+	menu();
 
 }
 
 void listar_ofertas() {
-    //Nó atual vai apontar para o cabecote
-    struct No *atual = cabecote;
 
-    if(cabecote == NULL) {
-		printf("Lista vazia \n");
-		return;
+	int decisao;
+
+    printf("\nQuaais ações deseja visualizar?");
+	printf("\n1 - GOGL34");
+	printf("\n2 - FBOK34");
+	printf("\n3 - AMZO34\n");
+	scanf("%d", &decisao);
+
+	while(decisao != GOGL34 && decisao != FBOK34 && decisao != AMZO34){
+
+		printf("\nOpção inválida.");
+		printf("\nQuais ações deseja visualizar?");
+		printf("\n1 - GOGL34");
+		printf("\n2 - FBOK34");
+		printf("\n3 - AMZO34\n");
+		scanf("%d", &decisao);
+
+	}
+	printf("******************************************* BOOK DE PRECOS *********************************************\n\n");
+	if(decisao == GOGL34){
+
+		listar_GOGL34();
+
+	}else if (decisao == FBOK34){
+
+		listar_FBOK34();
+
+	}else{
+
+		listar_AMZO34();
+
 	}
 
-    //FILE *arquivo;
+}
 
-   // arquivo = fopen("ofertas.txt", "rb");
+void listar_GOGL34(){
 
-   /* if(arquivo != NULL){
+	struct Venda *venda_atual = cabecote_venda = NULL;
+	struct Compra *compra_atual = cabecote_compra = NULL;
 
-    	fseek(arquivo, 0, SEEK_END);
-    	long tamanho_arquivo = ftell(arquivo);
-    	rewind(arquivo);
+	if(cabecote_venda == NULL || cabecote_compra == NULL) {
 
-    	int registros = (int)(tamanho_arquivo / (sizeof(No)));
+		printf("Não há um número suficiente de ofertas no momento.");
+		return;
 
-    	for(int i = 0; i < registros; i++){
+	}else{
 
-    		fseek(arquivo, (sizeof(No) * i), SEEK_SET);
-    		cabecote = listar_arquivo(cabecote, arquivo);
-    	}
+		while(compra_atual != NULL && venda_atual != NULL) {
+		//O nó atual vai apontar para o cabeçote
+			if(compra_atual->papel_compra == GOGL34) {
 
-    }else{*/
+				printf("| GOGL34 | COMPRA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
 
-
-		printf("**************************** BOOK DE PRECOS ***********************************");
-		while(atual != NULL) {
-
-			if(atual->identificador == GOGL34 && atual->operacao == VENDA){
-				printf("                                        _____________________________________\n");
-				printf("                                        | GOGL34 | VENDA | %d | %.2f |\n", atual->acoes, atual->preco);
-				atual = atual->proximo;
 			}
 
-			if(atual->identificador == GOGL34 && atual->operacao == COMPRA){
-				printf("_____________________________________\n");
-				printf("| GOGL34 | COMPRA | %d | %.2f |\n", atual->acoes, atual->preco);
-				atual = atual->proximo;
+			if(venda_atual->papel_venda == GOGL34) {
+
+				printf("                                        | GOGL34 | VENDA | %d | %.2f |\n", venda_atual->acoes_venda, venda_atual->preco_venda);
+
 			}
 
-			if(atual->identificador == FBOK34 && atual->operacao == VENDA){
-				printf("                                        _____________________________________\n");
-				printf("                                        | FBOK34 | VENDA | %d | %.2f |\n", atual->acoes, atual->preco);
-				atual = atual->proximo;
+			if(venda_atual != NULL){
+				venda_atual = venda_atual->proxima_venda;
 			}
 
-			if(atual->identificador == FBOK34 && atual->operacao == COMPRA){
-				printf("_____________________________________\n");
-				printf("| FBOK34 | COMPRA | %d | %.2f |\n", atual->acoes, atual->preco);
-				atual = atual->proximo;
-			}
-			if(atual->identificador == AMZO34 && atual->operacao == VENDA){
-				printf("                                        _____________________________________\n");
-				printf("                                        | AMZO34 | VENDA | %d | %.2f |\n", atual->acoes, atual->preco);
-				atual = atual->proximo;
-			}
-
-			if(atual->identificador == AMZO34 && atual->operacao == COMPRA){
-				printf("_____________________________________\n");
-				printf("| AMZO34 | COMPRA | %d | %.2f |\n", atual->acoes, atual->preco);
-				atual = atual->proximo;
+			if(compra_atual != NULL){
+				compra_atual = compra_atual->proxima_compra;
 			}
 		}
 
-		int decisao;
+	}
 
-		printf("\n1 - Listar ofertas novamente\n2 - Informar nova oferta\n3 - Negociar ofertas\n4 - Sair do programa\n");
-		scanf("%d", &decisao);
-		while(1){
+	menu();
 
-			switch(decisao){
+}
 
-				case 1:
-				listar_ofertas();
-				break;
-				case 2:
-				inserir_ofertas();
-				break;
-				case 3:
-				negociar_ofertas();
-				break;
-				case 4:
-				finalizar_sessao();
-				exit(0);
-				break;
-				default:
-				printf("Escolha Inválida.");
-				break;
+void listar_FBOK34(){
+
+	struct Venda *venda_atual = cabecote_venda = NULL;
+	struct Compra *compra_atual = cabecote_compra = NULL;
+
+	if(cabecote_venda == NULL || cabecote_compra == NULL) {
+
+		printf("Não há um número suficiente de ofertas no momento.");
+		return;
+
+	}else{
+
+		while(compra_atual != NULL && venda_atual != NULL) {
+		//O nó atual vai apontar para o cabeçote
+			if(compra_atual->papel_compra == FBOK34) {
+
+				printf("| FBOK34 | COMPRA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
+
 			}
 
+			if(venda_atual->papel_venda == GOGL34) {
+
+				printf("                                        | FBOK34 | VENDA | %d | %.2f |\n", venda_atual->acoes_venda, venda_atual->preco_venda);
+
+			}
+
+			if(venda_atual != NULL){
+				venda_atual = venda_atual->proxima_venda;
+			}
+
+			if(compra_atual != NULL){
+				compra_atual = compra_atual->proxima_compra;
+			}
 		}
 
-    //}
+	}
+
+	menu();
+
+}
+
+void listar_AMZO34(){
+
+
+	struct Venda *venda_atual = cabecote_venda;
+	struct Compra *compra_atual = cabecote_compra;
+
+	if(cabecote_venda == NULL || cabecote_compra == NULL) {
+
+		printf("Não há um número suficiente de ofertas no momento.");
+		return;
+
+	}else{
+
+		while(compra_atual != NULL && venda_atual != NULL) {
+		//O nó atual vai apontar para o cabeçote
+			if(compra_atual->papel_compra == AMZO34) {
+
+				printf("| AMZO34 | COMPRA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
+
+			}
+
+			if(venda_atual->papel_venda == AMZO34) {
+
+				printf("                                        | AMZO34 | VENDA | %d | %.2f |\n", venda_atual->acoes_venda, venda_atual->preco_venda);
+
+			}
+
+			if(venda_atual != NULL){
+				venda_atual = venda_atual->proxima_venda;
+			}
+
+			if(compra_atual != NULL){
+				compra_atual = compra_atual->proxima_compra;
+			}
+		}
+
+	}
+
+	menu();
 
 }
 
 
-void negociar_ofertas(){
-	//O nó atual vai apontar para o cabeçote
-	struct No *atual = cabecote, *indice = NULL;
 
-	if(cabecote == NULL) {
+void negociar_ofertas(){
+
+	//O nó atual vai apontar para o cabeçote
+	struct Compra *compra_atual = cabecote_compra;
+	struct Venda *venda_atual = cabecote_venda;
+	int decisao;
+	int posicao_compra = 0, posicao_venda = 0;
+
+	printf("\nQuais ações deseja negociar?");
+	printf("\n1 - GOGL34");
+	printf("\n2 - FBOK34");
+	printf("\n3 - AMZO34\n");
+	scanf("%d", &decisao);
+
+	while(decisao != GOGL34 && decisao != FBOK34 && decisao != AMZO34){
+
+		printf("\nOpção inválida.");
+		printf("\nQuais ações deseja comprar?");
+		printf("\n1 - GOGL34");
+		printf("\n2 - FBOK34");
+		printf("\n3 - AMZO34\n");
+		scanf("%d", &decisao);
+
+	}
+
+	if(cabecote_compra == NULL || cabecote_venda == NULL) {
 
 		return;
 
 	}else{
 
-		int posicao_compra = 0,posicao_venda = 0;
+		while(compra_atual != NULL) {
 
-		while(atual != NULL) {
+			while(venda_atual != NULL) {
 
-			indice = atual->proximo;
+				if((compra_atual->preco_compra == venda_atual->preco_venda) &&
+				   (compra_atual->acoes_compra <= venda_atual->acoes_venda) &&
+				   (compra_atual->papel_compra == GOGL34 && venda_atual->papel_venda == GOGL34) &&
+				   decisao == GOGL34) {
 
-			while(indice != NULL) {
+					int decisao;
+					printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
+					printf("| GOGL34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
+					scanf("%d", &decisao);
 
-				if((atual->preco == indice->preco) &&
-				   (atual->acoes <= indice->acoes) &&
-				   (atual->identificador == indice->identificador) &&
-				   (atual->operacao == COMPRA && indice->operacao == VENDA)) {
+					while(decisao != SIM && decisao != NAO){
 
-					char decisao;
+						printf("Opção inválida.\n");
+						printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
+						printf("| GOGL34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
+						scanf("%d", &decisao);
 
-					if(atual->identificador == GOGL34){
-						printf("Deseja realizar esta compra? (s/n)\n");
-						printf("_______________________________________________________________________\n");
-						printf("| GOGL34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
-						scanf("%c", &decisao);
+						if(decisao == SIM){
+							printf("Cotação GOGL34:");
+							printf("| GOGL34 | ÚLTIMO PREÇO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
 
-						while(decisao != 'y' && decisao != 'n'){
+							venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
 
-							printf("Opção inválida.\n");
-							printf("Deseja realizar esta compra? (s/n)\n");
-							printf("_______________________________________________________________________\n");
-							printf("| GOGL34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
-							scanf("%c", &decisao);
+							if(venda_atual->acoes_venda == 0){
 
-							if(decisao == 'y'){
-								printf("Cotação GOGL34:");
-								printf("_______________________________________________________________________\n");
-								printf("| GOGL34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
-
-								indice->acoes = indice->acoes - atual->acoes;
-
-								if(indice->acoes == 0){
-
-									eliminar_ofertas(posicao_venda);
-
-								}
-
-								if(atual->acoes == 0){
-
-									eliminar_ofertas(posicao_compra);
-
-								}
+								eliminar_venda(posicao_venda);
 
 							}
 
-							if(decisao == 'n'){
+							if(compra_atual->acoes_compra == 0){
 
-								break;
+								eliminar_compra(posicao_compra);
 
 							}
 
 						}
-					}
-					if(atual->identificador == FBOK34){
 
-						printf("Deseja realizar esta compra?\n");
-						printf("_______________________________________________________________________\n");
-						printf("| FBOK34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
-						while(decisao != 'y' && decisao != 'n'){
+						if(decisao == NAO){
 
-							printf("Opção inválida.\n");
-							printf("Deseja realizar esta compra? (s/n)\n");
-							printf("_______________________________________________________________________\n");
-							printf("| FBOK34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
-							scanf("%c", &decisao);
+							break;
 
-							if(decisao == 'y'){
-								printf("Cotação FBOK34:");
-								printf("_______________________________________________________________________\n");
-								printf("| FBOK34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
-
-								indice->acoes = indice->acoes - atual->acoes;
-
-								if(indice->acoes == 0){
-
-									eliminar_ofertas(posicao_venda);
-
-								}
-
-								if(atual->acoes == 0){
-
-									eliminar_ofertas(posicao_compra);
-
-								}
-
-							}
-
-							if(decisao == 'n'){
-
-								break;
-
-							}
 						}
-					}
-					if(atual->identificador == AMZO34){
 
-						printf("Deseja realizar esta compra?\n");
-						printf("_______________________________________________________________________\n");
-						printf("| AMZO34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
-						scanf("%c", &decisao);
-						while(decisao != 'y' && decisao != 'n'){
+					}
+
+				}else if((compra_atual->preco_compra == venda_atual->preco_venda) &&
+					   (compra_atual->acoes_compra <= venda_atual->acoes_venda) &&
+					   (compra_atual->papel_compra == FBOK34 && venda_atual->papel_venda == FBOK34) &&
+					   decisao == FBOK34) {
+
+					int decisao;
+					printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
+					printf("| FBOK34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
+					scanf("%d", &decisao);
+
+					while(decisao != SIM && decisao != NAO){
+
+						printf("Opção inválida.\n");
+						printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
+						printf("| FBOK34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
+						scanf("%d", &decisao);
+
+						if(decisao == SIM){
+							printf("Cotação FBOK34:");
+							printf("| FBOK34 | ÚLTIMO PREÇO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
+
+							venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
+
+							if(venda_atual->acoes_venda == 0){
+
+								eliminar_venda(posicao_venda);
+
+							}
+
+							if(compra_atual->acoes_compra == 0){
+
+								eliminar_compra(posicao_compra);
+
+							}
+
+						}
+
+						if(decisao == NAO){
+
+							break;
+
+						}
+
+					}
+
+				}else if((compra_atual->preco_compra == venda_atual->preco_venda) &&
+					   (compra_atual->acoes_compra <= venda_atual->acoes_venda) &&
+					   (compra_atual->papel_compra == AMZO34 && venda_atual->papel_venda == AMZO34) &&
+					   decisao == AMZO34) {
+
+						int decisao;
+						printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
+						printf("| AMZO34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
+						scanf("%d", &decisao);
+
+						while(decisao != SIM && decisao != NAO){
 
 							printf("Opção inválida.\n");
-							printf("Deseja realizar esta compra? (s/n)\n");
-							printf("_______________________________________________________________________\n");
-							printf("| AMZO34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
-							scanf("%c", &decisao);
+							printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
+							printf("| AMZO34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
+							scanf("%d", &decisao);
 
-							if(decisao == 'y'){
+							if(decisao == SIM){
 								printf("Cotação AMZO34:");
-								printf("_______________________________________________________________________\n");
-								printf("| AMZO34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", atual->acoes, atual->preco, indice->acoes, indice->preco);
+								printf("| AMZO34 | ÚLTIMO PREÇO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
 
-								indice->acoes = indice->acoes - atual->acoes;
+								venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
 
-								if(indice->acoes == 0){
+								if(venda_atual->acoes_venda == 0){
 
-									eliminar_ofertas(posicao_venda);
+									eliminar_venda(posicao_venda);
 
 								}
 
-								if(atual->acoes == 0){
+								if(compra_atual->acoes_compra == 0){
 
-									eliminar_ofertas(posicao_compra);
+									eliminar_compra(posicao_compra);
 
 								}
 
 							}
 
-							if(decisao == 'n'){
+						if(decisao == NAO){
 
-								break;
+							break;
 
-							}
 						}
+
 					}
 
 				}
 
 			}
 			posicao_venda++;
-			indice = indice->proximo;
+			venda_atual = venda_atual->proxima_venda;
 		}
 		posicao_compra++;
-		atual = atual->proximo;
+		compra_atual = compra_atual->proxima_compra;
 	}
+
+	menu();
 }
 
 
-void persistir_ofertas(No *cabecote){
 
-	FILE *arquivo;
+void eliminar_compra(int posicao){
 
-	arquivo = fopen("ofertas.txt", "wb");
+	struct Compra *temp,*ptr;
 
-	if(arquivo != NULL){
-
-		No *atual = cabecote;
-		No *segura_proximo = NULL;
-		No *segura_anterior = NULL;
-
-		while(atual != NULL){
-
-			segura_proximo = atual->proximo;
-			segura_anterior = atual->anterior;
-
-			atual->proximo = NULL;
-			atual->anterior = NULL;
-
-			fseek(arquivo, 0, SEEK_END);
-			fwrite(atual, sizeof(No), 1, arquivo);
-
-			atual->proximo = segura_proximo;
-			atual->anterior = segura_anterior;
-
-			segura_proximo = NULL;
-			segura_anterior = NULL;
-
-			atual = atual->proximo;
-
-		}
-
-		fclose(arquivo);
-		arquivo = NULL;
-
-	}else{
-
-		printf("Erro ao abrir arquivo.");
-
-	}
-
-}
-
-void eliminar_ofertas(int posicao){
-
-	struct No *temp,*ptr;
-
-	if(cabecote == NULL){
+	if(cabecote_compra == NULL){
 
 		printf("Lista vazia");
 		return;
@@ -555,24 +666,66 @@ void eliminar_ofertas(int posicao){
 
 		if(posicao == 0){
 
-			ptr = cabecote;
-			cabecote = cabecote->proximo ;
+			ptr = cabecote_compra;
+			cabecote_compra = cabecote_compra->proxima_compra ;
 			free(ptr);
 
 		}else{
-			ptr = cabecote;
+
+			ptr = cabecote_compra;
 			for(int i = 0; i < posicao; i++) {
 				temp = ptr;
-				ptr = ptr->proximo ;
+				ptr = ptr->proxima_compra;
 
 				if(ptr == NULL){
 					printf("Posição não encontrada.\n");
 					return;
 				}
 			}
-			temp->proximo = ptr->proximo ;
+			temp->proxima_compra = ptr->proxima_compra;
 			free(ptr);
-		}
-	}
+			}
 
+		}
+	menu();
 }
+
+
+
+void eliminar_venda(int posicao){
+
+	struct Venda *temp,*ptr;
+
+	if(cabecote_venda == NULL){
+
+		printf("Lista vazia");
+		return;
+
+	}else{
+
+		if(posicao == 0){
+
+			ptr = cabecote_venda;
+			cabecote_venda = cabecote_venda->proxima_venda;
+			free(ptr);
+
+		}else{
+
+			ptr = cabecote_venda;
+			for(int i = 0; i < posicao; i++) {
+				temp = ptr;
+				ptr = ptr->proxima_venda;
+
+				if(ptr == NULL){
+					printf("Posição não encontrada.\n");
+					return;
+				}
+			}
+			temp->proxima_venda = ptr->proxima_venda;
+			free(ptr);
+			}
+
+		}
+	menu();
+}
+
