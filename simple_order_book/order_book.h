@@ -10,6 +10,7 @@
 #define GOGL34 1
 #define FBOK34 2
 #define AMZO34 3
+#define ARQUIVO 4
 
 
 typedef struct Compra {
@@ -26,6 +27,7 @@ typedef struct Venda {
     struct Venda *proxima_venda;
 } Venda;
 
+
 void menu();
 void finalizar_sessao();
 void inserir_ofertas();
@@ -39,8 +41,12 @@ void ordenar_vendas();
 void ordenar_compras();
 void persistir_compras();
 void persistir_vendas();
+void escolha_arquivos();
+struct Compras listar_arquivos_compra();
+struct Vendas listar_arquivos_venda();
+struct Compras salvar_arquivos_compra();
+struct Vendas salvar_arquivos_venda();
 void negociar_ofertas();
-void eliminar_compra(int posicao);
-void eliminar_venda(int posicao);
+void eliminar_ofertas(int posicao_venda, int valor_venda, int posicao_compra, int valor_compra);
 
 #endif
