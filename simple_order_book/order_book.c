@@ -240,8 +240,8 @@ void ordenar_compras(){
 		}
 	}
 
-	salvar_arquivos_compra();
-	//menu();
+	//salvar_arquivos_compra();
+	menu();
 
 }
 
@@ -286,8 +286,8 @@ void ordenar_vendas(){
 			atual = atual->proxima_venda;
 		}
 	}
-	salvar_arquivos_venda();
-	//menu();
+	//salvar_arquivos_venda();
+	menu();
 
 }
 
@@ -328,7 +328,7 @@ void listar_ofertas() {
 
 	}else{
 
-		escolher_arquivos();
+		//escolher_arquivos();
 
 	}
 
@@ -475,11 +475,11 @@ void escolher_arquivos(){
 	printf("********************************* BANCO DE OFERTAS ***********************************\n\n");
 		if(decisao == COMPRA){
 
-			listar_arquivos_compra();
+			//listar_arquivos_compra();
 
 		}else{
 
-			listar_arquivos_venda();
+			//listar_arquivos_venda();
 
 		}
 
@@ -794,4 +794,5 @@ void finalizar_sessao(){
 	 printf("\nAté mais!");
 	 exit(0);
 }
+
 
