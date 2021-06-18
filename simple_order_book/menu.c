@@ -1,19 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "order_book.h"
 
-int main(){
+void menu(){
 
-	int escolher;
+	int decisao;
 
+	printf("\n1 - Listar ofertas\n2 - Informar nova oferta\n3 - Negociar ofertas\n4 - Sair\n");
+	scanf("%d", &decisao);
 	while(1){
-		printf("\nBem vindo ao OrderBook\n");
-		printf("\n1 - Listar ofertas");
-		printf("\n2 - Inserir ofertas");
-		printf("\n3 - Negociar ofertas");
-		printf("\n4 - Sair");
-		scanf("%d",&escolher);
-		switch(escolher){
+
+		switch(decisao){
 
 			case 1:
 			listar_ofertas();
@@ -26,15 +24,12 @@ int main(){
 			break;
 			case 4:
 			finalizar_sessao();
-			exit(0);
 			break;
 			default:
 			printf("Escolha Inválida.");
 			break;
 		}
+
 	}
-	return 0;
 
 }
-
-

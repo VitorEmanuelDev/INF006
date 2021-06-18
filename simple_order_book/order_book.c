@@ -6,38 +6,7 @@
 struct Compra *cabecote_compra = NULL;
 struct Venda *cabecote_venda = NULL;
 
-
-
-void menu(){
-
-	int decisao;
-
-	printf("\n1 - Listar ofertas\n2 - Informar nova oferta\n3 - Negociar ofertas\n4 - Sair\n");
-	scanf("%d", &decisao);
-	while(1){
-
-		switch(decisao){
-
-			case 1:
-			listar_ofertas();
-			break;
-			case 2:
-			inserir_ofertas();
-			break;
-			case 3:
-			negociar_ofertas();
-			break;
-			case 4:
-			finalizar_sessao();
-			break;
-			default:
-			printf("Escolha Inválida.");
-			break;
-		}
-
-	}
-
-}
+//OFERTAS
 
 void inserir_ofertas(){
 
@@ -54,7 +23,7 @@ void inserir_ofertas(){
 
 	if(decisao == VENDA){
 
-		inserir_vendas();
+		inserir_venda();
 
 	}
 
@@ -67,229 +36,6 @@ void inserir_ofertas(){
 
 }
 
-void inserir_vendas(){
-
-
-	struct Venda *temp,*ptr;
-	temp = (struct Venda *)malloc(sizeof(struct Venda));
-
-	if(temp == NULL){
-		printf("Espaço fora da memória.");
-		return;
-	}
-
-
-	printf("De qual cotação deseja vender?");
-	printf("\n1 - GOGL34");
-	printf("\n2 - FBOK34");
-	printf("\n3 - AMZO34\n");
-	scanf("%d", &temp->papel_venda);
-
-	while(temp->papel_venda != GOGL34 && temp->papel_venda != FBOK34 && temp->papel_venda != AMZO34){
-
-		printf("\nOpção inválida.");
-		printf("\nDe qual cotação deseja vender?");
-		printf("\n1 - GOGL34");
-		printf("\n2 - FBOK34");
-		printf("\n3 - AMZO34\n");
-		scanf("%d", &temp->papel_venda);
-
-	}
-
-	printf("Qual o preço de venda das ações?\n");
-	scanf("%f",&temp->preco_venda);
-
-	while(temp->preco_venda < 0){
-
-		printf("\nValor deve ser positivo.");
-		printf("Qual o preço de venda das ações?\n");
-		scanf("%f",&temp->preco_venda);
-
-	}
-
-	printf("Quantas ações pelo preço informado?\n");
-	scanf("%d",&temp->acoes_venda);
-
-	while(temp->acoes_venda < 0){
-
-		printf("\nValor deve ser positivo.");
-		printf("Quantas ações pelo preço informado?\n");
-		scanf("%d",&temp->acoes_venda);
-
-	}
-
-	temp->proxima_venda = NULL;
-
-	if(cabecote_venda == NULL){
-		cabecote_venda = temp;
-	}else{
-    	ptr = cabecote_venda;
-        while(ptr->proxima_venda != NULL){
-            ptr = ptr->proxima_venda ;
-        }
-        ptr->proxima_venda = temp;
-	}
-
-    ordenar_vendas();
-
-}
-
-void inserir_compra(){
-
-	struct Compra *temp,*ptr;
-	temp = (struct Compra *)malloc(sizeof(struct Compra));
-
-	if(temp == NULL){
-		printf("Espaço fora da memória.");
-		return;
-	}
-
-	printf("\nDe qual cotação deseja comprar?");
-	printf("\n1 - GOGL34");
-	printf("\n2 - FBOK34");
-	printf("\n3 - AMZO34\n");
-	scanf("%d", &temp->papel_compra);
-
-	while(temp->papel_compra != GOGL34 && temp->papel_compra != FBOK34 && temp->papel_compra != AMZO34){
-
-		printf("\nOpção inválida.");
-		printf("De qual cotação deseja comprar?");
-		printf("\n1 - GOGL34");
-		printf("\n2 - FBOK34");
-		printf("\n3 - AMZO34\n");
-		scanf("%d", &temp->papel_compra);
-
-	}
-
-	printf("Qual o preço de compra das ações?\n");
-	scanf("%f",&temp->preco_compra);
-
-	while(temp->preco_compra < 0){
-
-		printf("\nValor deve ser positivo.");
-		printf("Qual o preço de compra das ações?\n");
-		scanf("%f",&temp->preco_compra);
-
-	}
-
-	printf("Quantas ações pelo preço informado?\n");
-	scanf("%d",&temp->acoes_compra);
-
-	while(temp->acoes_compra < 0){
-
-		printf("\nValor deve ser positivo.");
-		printf("Quantas ações pelo preço informado?\n");
-		scanf("%d",&temp->acoes_compra);
-
-	}
-
-	temp->proxima_compra = NULL;
-
-	if(cabecote_compra == NULL){
-		cabecote_compra = temp;
-	}else{
-    	ptr = cabecote_compra;
-        while(ptr->proxima_compra != NULL){
-            ptr = ptr->proxima_compra ;
-        }
-        ptr->proxima_compra = temp;
-	}
-
-    ordenar_compras();
-
-}
-
-
-void ordenar_compras(){
-	//O nó atual vai apontar para o cabeçote
-	struct Compra *atual = cabecote_compra, *indice = NULL;
-
-	int temp;
-
-	if(cabecote_compra == NULL) {
-
-		return;
-
-	}else{
-
-		while(atual != NULL) {
-		//O nó atual vai apontar para o cabeçote
-
-			indice = atual->proxima_compra;
-
-			while(indice != NULL) {
-
-				if(atual->preco_compra < indice->preco_compra) {
-
-					temp = atual->preco_compra;
-					atual->preco_compra = indice->preco_compra;
-					indice->preco_compra = temp;
-
-					temp = atual->acoes_compra;
-					atual->acoes_compra  = indice->acoes_compra;
-					indice->acoes_compra = temp;
-
-					temp = atual->papel_compra;
-					atual->papel_compra =  indice->papel_compra;
-					indice->papel_compra = temp;
-
-				}
-				indice = indice->proxima_compra;
-			}
-			atual = atual->proxima_compra;
-		}
-	}
-
-	//salvar_arquivos_compra();
-	menu();
-
-}
-
-
-void ordenar_vendas(){
-
-	//O nó atual vai apontar para o cabeçote
-	struct Venda *atual = cabecote_venda, *indice = NULL;
-
-	int temp;
-
-	if(cabecote_venda == NULL) {
-
-		return;
-
-	}else{
-
-		while(atual != NULL) {
-		//O nó atual vai apontar para o cabeçote
-
-			indice = atual->proxima_venda;
-
-			while(indice != NULL) {
-
-				if(atual->preco_venda > indice->preco_venda) {
-
-					temp = atual->preco_venda;
-					atual->preco_venda = indice->preco_venda;
-					indice->preco_venda = temp;
-
-					temp = atual->acoes_venda;
-					atual->acoes_venda  = indice->acoes_venda;
-					indice->acoes_venda = temp;
-
-					temp = atual->papel_venda;
-					atual->papel_venda =  indice->papel_venda;
-					indice->papel_venda = temp;
-
-				}
-				indice = indice->proxima_venda;
-			}
-			atual = atual->proxima_venda;
-		}
-	}
-	//salvar_arquivos_venda();
-	menu();
-
-}
 
 void listar_ofertas() {
 
@@ -299,7 +45,7 @@ void listar_ofertas() {
 	printf("\n1 - GOGL34");
 	printf("\n2 - FBOK34");
 	printf("\n3 - AMZO34\n");
-	printf("\n4 - Arquivo de ofertas.");
+	printf("\n4 - Ver arquivo");
 	scanf("%d", &decisao);
 
 	while(decisao != GOGL34 && decisao != FBOK34 && decisao != AMZO34 && decisao != ARQUIVO){
@@ -308,8 +54,8 @@ void listar_ofertas() {
 		printf("\nQuais ações deseja visualizar?");
 		printf("\n1 - GOGL34");
 		printf("\n2 - FBOK34");
-		printf("\n3 - AMZO34\n");
-		printf("\n4 - Arquivo de ofertas.");
+		printf("\n3 - AMZO34");
+		printf("\n4 - Ver arquivo");
 		scanf("%d", &decisao);
 
 	}
@@ -328,7 +74,7 @@ void listar_ofertas() {
 
 	}else{
 
-		//escolher_arquivos();
+		escolher_arquivos();
 
 	}
 
@@ -472,14 +218,13 @@ void escolher_arquivos(){
 		scanf("%d", &decisao );
 	}
 
-	printf("********************************* BANCO DE OFERTAS ***********************************\n\n");
 		if(decisao == COMPRA){
 
-			//listar_arquivos_compra();
+			buscar_arquivos_compra();
 
 		}else{
 
-			//listar_arquivos_venda();
+			buscar_arquivos_venda();
 
 		}
 
@@ -771,7 +516,7 @@ void eliminar_ofertas(int posicao_venda, int valor_venda, int posicao_compra, in
 
 	}
 
-	menu();
+	ordenar_vendas();
 
 }
 
@@ -796,3 +541,440 @@ void finalizar_sessao(){
 }
 
 
+//VENDAS
+
+
+void inserir_venda(){
+
+
+	struct Venda *temp,*ptr;
+	temp = (struct Venda *)malloc(sizeof(struct Venda));
+
+	if(temp == NULL){
+		printf("Espaço fora da memória.");
+		return;
+	}
+
+
+	printf("De qual cotação deseja vender?");
+	printf("\n1 - GOGL34");
+	printf("\n2 - FBOK34");
+	printf("\n3 - AMZO34\n");
+	scanf("%d", &temp->papel_venda);
+
+	while(temp->papel_venda != GOGL34 && temp->papel_venda != FBOK34 && temp->papel_venda != AMZO34){
+
+		printf("\nOpção inválida.");
+		printf("\nDe qual cotação deseja vender?");
+		printf("\n1 - GOGL34");
+		printf("\n2 - FBOK34");
+		printf("\n3 - AMZO34\n");
+		scanf("%d", &temp->papel_venda);
+
+	}
+
+	printf("Qual o preço de venda das ações?\n");
+	scanf("%f",&temp->preco_venda);
+
+	while(temp->preco_venda < 0){
+
+		printf("\nValor deve ser positivo.");
+		printf("Qual o preço de venda das ações?\n");
+		scanf("%f",&temp->preco_venda);
+
+	}
+
+	printf("Quantas ações pelo preço informado?\n");
+	scanf("%d",&temp->acoes_venda);
+
+	while(temp->acoes_venda < 0){
+
+		printf("\nValor deve ser positivo.");
+		printf("Quantas ações pelo preço informado?\n");
+		scanf("%d",&temp->acoes_venda);
+
+	}
+
+	temp->proxima_venda = NULL;
+
+	if(cabecote_venda == NULL){
+		cabecote_venda = temp;
+	}else{
+    	ptr = cabecote_venda;
+        while(ptr->proxima_venda != NULL){
+            ptr = ptr->proxima_venda ;
+        }
+        ptr->proxima_venda = temp;
+	}
+
+    ordenar_vendas();
+
+}
+
+
+void ordenar_vendas(){
+
+	//O nó atual vai apontar para o cabeçote
+	struct Venda *atual = cabecote_venda, *indice = NULL;
+
+	int temp;
+
+	if(cabecote_venda == NULL) {
+
+		return;
+
+	}else{
+
+		while(atual != NULL) {
+		//O nó atual vai apontar para o cabeçote
+
+			indice = atual->proxima_venda;
+
+			while(indice != NULL) {
+
+				if(atual->preco_venda > indice->preco_venda) {
+
+					temp = atual->preco_venda;
+					atual->preco_venda = indice->preco_venda;
+					indice->preco_venda = temp;
+
+					temp = atual->acoes_venda;
+					atual->acoes_venda  = indice->acoes_venda;
+					indice->acoes_venda = temp;
+
+					temp = atual->papel_venda;
+					atual->papel_venda =  indice->papel_venda;
+					indice->papel_venda = temp;
+
+				}
+				indice = indice->proxima_venda;
+			}
+			atual = atual->proxima_venda;
+		}
+	}
+	salvar_arquivos_venda();
+
+}
+
+void salvar_arquivos_venda(){
+
+	struct Venda* temp = cabecote_venda;
+
+	FILE* file;
+	file = fopen ("vendas.txt", "w");
+
+	 if (file == NULL){
+
+		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
+		menu();
+	}
+
+	while(temp != NULL){
+
+		fwrite(temp, sizeof(struct Venda), 1, file);
+		temp = temp->proxima_venda;
+	}
+
+	if(fwrite != 0){
+
+		fclose(file);
+		menu();
+
+	}else{
+
+		printf("Erro ao salvaar arquivo\n");
+		fclose(file);
+		menu();
+
+	}
+
+
+}
+
+struct Venda* buscar_arquivos_venda(){
+
+	struct Venda* temp = (struct Venda *)malloc(sizeof(struct Venda));;
+	struct Venda* cabecote;
+	struct Venda* cauda;
+	cauda = cabecote = NULL;
+
+	FILE* file;
+	file = fopen ("vendas.txt", "r");
+
+	if (file == NULL){
+
+		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
+		menu();
+	}
+
+	while(fread(temp, sizeof(struct Venda), 1, file)){
+
+		if(cabecote == NULL){
+
+			cabecote = cauda = (struct Venda *)malloc(sizeof(struct Venda));
+
+		}else{
+
+			cauda->proxima_venda = (struct Venda *)malloc(sizeof(struct Venda));
+			cauda = cauda->proxima_venda;
+
+		}
+
+		cauda->papel_venda = temp->papel_venda;
+		cauda->acoes_venda = temp->acoes_venda;
+		cauda->preco_venda= temp->preco_venda;
+		cauda->proxima_venda = NULL;
+
+	}
+
+	fclose(file);
+
+	return(cabecote);
+
+
+}
+
+void listar_arquivos_venda(struct Venda *cabecote){
+
+    struct Venda *temp = cabecote;
+
+    while(temp != NULL){
+
+    	if(temp->papel_venda == GOGL34) {
+
+			printf("| GOGL34 | COMPRA | %d | %.2f |\n", temp->acoes_venda, temp->preco_venda);
+
+		}
+    	if(temp->papel_venda == FBOK34) {
+
+			printf("| FBOK34 | COMPRA | %d | %.2f |\n", temp->acoes_venda, temp->preco_venda);
+
+		}
+    	if(temp->papel_venda == AMZO34) {
+
+			printf("| AMZO34 | COMPRA | %d | %.2f |\n", temp->acoes_venda, temp->preco_venda);
+
+		}
+
+        temp = temp->proxima_venda;
+    }
+    menu();
+}
+
+//COMPRAS
+
+
+void inserir_compra(){
+
+	struct Compra *temp,*ptr;
+	temp = (struct Compra *)malloc(sizeof(struct Compra));
+
+	if(temp == NULL){
+		printf("Espaço fora da memória.");
+		return;
+	}
+
+	printf("\nDe qual cotação deseja comprar?");
+	printf("\n1 - GOGL34");
+	printf("\n2 - FBOK34");
+	printf("\n3 - AMZO34\n");
+	scanf("%d", &temp->papel_compra);
+
+	while(temp->papel_compra != GOGL34 && temp->papel_compra != FBOK34 && temp->papel_compra != AMZO34){
+
+		printf("\nOpção inválida.");
+		printf("De qual cotação deseja comprar?");
+		printf("\n1 - GOGL34");
+		printf("\n2 - FBOK34");
+		printf("\n3 - AMZO34\n");
+		scanf("%d", &temp->papel_compra);
+
+	}
+
+	printf("Qual o preço de compra das ações?\n");
+	scanf("%f",&temp->preco_compra);
+
+	while(temp->preco_compra < 0){
+
+		printf("\nValor deve ser positivo.");
+		printf("Qual o preço de compra das ações?\n");
+		scanf("%f",&temp->preco_compra);
+
+	}
+
+	printf("Quantas ações pelo preço informado?\n");
+	scanf("%d",&temp->acoes_compra);
+
+	while(temp->acoes_compra < 0){
+
+		printf("\nValor deve ser positivo.");
+		printf("Quantas ações pelo preço informado?\n");
+		scanf("%d",&temp->acoes_compra);
+
+	}
+
+	temp->proxima_compra = NULL;
+
+	if(cabecote_compra == NULL){
+		cabecote_compra = temp;
+	}else{
+    	ptr = cabecote_compra;
+        while(ptr->proxima_compra != NULL){
+            ptr = ptr->proxima_compra ;
+        }
+        ptr->proxima_compra = temp;
+	}
+
+    ordenar_compras();
+
+}
+
+
+void ordenar_compras(){
+	//O nó atual vai apontar para o cabeçote
+	struct Compra *atual = cabecote_compra, *indice = NULL;
+
+	int temp;
+
+	if(cabecote_compra == NULL) {
+
+		return;
+
+	}else{
+
+		while(atual != NULL) {
+		//O nó atual vai apontar para o cabeçote
+
+			indice = atual->proxima_compra;
+
+			while(indice != NULL) {
+
+				if(atual->preco_compra < indice->preco_compra) {
+
+					temp = atual->preco_compra;
+					atual->preco_compra = indice->preco_compra;
+					indice->preco_compra = temp;
+
+					temp = atual->acoes_compra;
+					atual->acoes_compra  = indice->acoes_compra;
+					indice->acoes_compra = temp;
+
+					temp = atual->papel_compra;
+					atual->papel_compra =  indice->papel_compra;
+					indice->papel_compra = temp;
+
+				}
+				indice = indice->proxima_compra;
+			}
+			atual = atual->proxima_compra;
+		}
+	}
+
+	salvar_arquivos_compra();
+
+}
+
+void salvar_arquivos_compra(){
+
+	struct Compra* temp = cabecote_compra;
+
+	FILE* file;
+	file = fopen ("compras.txt", "w");
+
+	 if (file == NULL){
+
+		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
+		menu();
+	}
+
+	while(temp != NULL){
+
+		fwrite(temp, sizeof(struct Compra), 1, file);
+		temp = temp->proxima_compra;
+	}
+
+	if(fwrite != 0){
+
+		fclose(file);
+		menu();
+
+	}else{
+
+		printf("Erro ao salvaar arquivo\n");
+		fclose(file);
+		menu();
+
+	}
+
+
+}
+
+struct Compra* buscar_arquivos_compra(){
+
+	struct Compra* temp = (struct Compra *)malloc(sizeof(struct Compra));;
+	struct Compra* cabecote;
+	struct Compra* cauda;
+	cauda = cabecote = NULL;
+
+	FILE* file;
+	file = fopen ("compras.txt", "r");
+
+	if (file == NULL){
+
+		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
+		menu();
+	}
+
+	while(fread(temp, sizeof(struct Compra), 1, file)){
+
+		if(cabecote == NULL){
+
+			cabecote = cauda = (struct Compra *)malloc(sizeof(struct Compra));
+
+		}else{
+
+			cauda->proxima_compra = (struct Compra *)malloc(sizeof(struct Compra));
+			cauda = cauda->proxima_compra;
+
+		}
+
+		cauda->papel_compra = temp->papel_compra;
+		cauda->acoes_compra = temp->acoes_compra;
+		cauda->preco_compra = temp->preco_compra;
+		cauda->proxima_compra = NULL;
+
+	}
+
+	fclose(file);
+
+	return(cabecote);
+
+
+}
+
+void listar_arquivos_compra(struct Compra *cabecote){
+
+    struct Compra *temp = cabecote;
+
+    while(temp!=NULL){
+
+    	if(temp->papel_compra == GOGL34) {
+
+			printf("| GOGL34 | COMPRA | %d | %.2f |\n", temp->acoes_compra, temp->preco_compra);
+
+		}
+    	if(temp->papel_compra == FBOK34) {
+
+			printf("| FBOK34 | COMPRA | %d | %.2f |\n", temp->acoes_compra, temp->preco_compra);
+
+		}
+    	if(temp->papel_compra == AMZO34) {
+
+			printf("| AMZO34 | COMPRA | %d | %.2f |\n", temp->acoes_compra, temp->preco_compra);
+
+		}
+
+        temp = temp->proxima_compra;
+    }
+    menu();
+}

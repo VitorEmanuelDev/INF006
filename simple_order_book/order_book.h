@@ -27,11 +27,11 @@ typedef struct Venda {
     struct Venda *proxima_venda;
 } Venda;
 
-
+void main();
 void menu();
 void finalizar_sessao();
 void inserir_ofertas();
-void inserir_vendas();
+void inserir_venda();
 void inserir_compra();
 void listar_ofertas();
 void listar_GOGL34();
@@ -39,13 +39,13 @@ void listar_FBOK34();
 void listar_AMZO34();
 void ordenar_vendas();
 void ordenar_compras();
-void persistir_compras();
-void persistir_vendas();
-void escolha_arquivos();
-struct Compras listar_arquivos_compra();
-struct Vendas listar_arquivos_venda();
-struct Compras salvar_arquivos_compra();
-struct Vendas salvar_arquivos_venda();
+void escolher_arquivos();
+void listar_arquivos_compra();
+void listar_arquivos_venda();
+struct Compra* buscar_arquivos_compra();
+struct Venda* buscar_arquivos_venda();
+void salvar_arquivos_compra();
+void salvar_arquivos_venda();
 void negociar_ofertas();
 void eliminar_ofertas(int posicao_venda, int valor_venda, int posicao_compra, int valor_compra);
 
