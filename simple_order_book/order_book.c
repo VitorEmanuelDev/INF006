@@ -47,9 +47,10 @@ void listar_ofertas() {
 	printf("\n2 - FBOK34");
 	printf("\n3 - AMZO34");
 	printf("\n4 - Ver arquivo");
+	printf("\n5 - Voltar\n");
 	scanf("%d", &decisao);
 
-	while(decisao != GOGL34 && decisao != FBOK34 && decisao != AMZO34 && decisao != ARQUIVO){
+	while(decisao != GOGL34 && decisao != FBOK34 && decisao != AMZO34 && decisao != ARQUIVO && decisao != VOLTAR){
 
 		printf("\nOpção inválida.");
 		printf("\nQuais ações deseja visualizar?");
@@ -57,6 +58,7 @@ void listar_ofertas() {
 		printf("\n2 - FBOK34");
 		printf("\n3 - AMZO34");
 		printf("\n4 - Ver arquivo");
+		printf("\n5 - Voltar\n");
 		scanf("%d", &decisao);
 
 	}
@@ -74,6 +76,9 @@ void listar_ofertas() {
 		break;
 		case ARQUIVO:
 		escolher_arquivos();
+		break;
+		case VOLTAR:
+		main();
 		break;
 		default:
 		break;
@@ -245,16 +250,18 @@ void negociar_ofertas(){
 	printf("\nQuais ações deseja negociar?");
 	printf("\n1 - GOGL34");
 	printf("\n2 - FBOK34");
-	printf("\n3 - AMZO34\n");
+	printf("\n3 - AMZO34");
+	printf("\n4 - Voltar\n");
 	scanf("%d", &decisao);
 
-	while(decisao != GOGL34 && decisao != FBOK34 && decisao != AMZO34){
+	while(decisao != GOGL34 && decisao != FBOK34 && decisao != AMZO34 && decisao != VOLTAR){
 
 		printf("\nOpção inválida.");
 		printf("\nQuais ações deseja comprar?");
 		printf("\n1 - GOGL34");
 		printf("\n2 - FBOK34");
-		printf("\n3 - AMZO34\n");
+		printf("\n3 - AMZO34");
+		printf("\n4 - Voltar\n");
 		scanf("%d", &decisao);
 
 	}
@@ -577,21 +584,34 @@ void inserir_venda(){
 		return;
 	}
 
+	int decisao;
 
 	printf("De qual cotação deseja vender?");
 	printf("\n1 - GOGL34");
 	printf("\n2 - FBOK34");
-	printf("\n3 - AMZO34\n");
-	scanf("%d", &temp->papel_venda);
+	printf("\n3 - AMZO34");
+	printf("\n4 - Voltar\n");
+	scanf("%d", &decisao);
 
-	while(temp->papel_venda != GOGL34 && temp->papel_venda != FBOK34 && temp->papel_venda != AMZO34){
+	while(decisao != GOGL34 && decisao != FBOK34 && decisao != AMZO34 && decisao != VOLTAR){
 
 		printf("\nOpção inválida.");
 		printf("\nDe qual cotação deseja vender?");
 		printf("\n1 - GOGL34");
 		printf("\n2 - FBOK34");
-		printf("\n3 - AMZO34\n");
-		scanf("%d", &temp->papel_venda);
+		printf("\n3 - AMZO34");
+		printf("\n4 - Voltar\n");
+		scanf("%d", &decisao);
+
+	}
+
+	if(decisao == VOLTAR){
+
+		main();
+
+	}else{
+
+		temp->papel_venda = decisao;
 
 	}
 
@@ -689,7 +709,7 @@ void salvar_arquivos_venda(){
 	 if (file == NULL){
 
 		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
-		menu();
+		main();
 	}
 
 	while(temp != NULL){
@@ -756,20 +776,34 @@ void inserir_compra(){
 		return;
 	}
 
-	printf("\nDe qual cotação deseja comprar?");
+	int decisao;
+
+	printf("De qual cotação deseja comprar?");
 	printf("\n1 - GOGL34");
 	printf("\n2 - FBOK34");
-	printf("\n3 - AMZO34\n");
-	scanf("%d", &temp->papel_compra);
+	printf("\n3 - AMZO34");
+	printf("\n4 - Voltar\n");
+	scanf("%d", &decisao);
 
-	while(temp->papel_compra != GOGL34 && temp->papel_compra != FBOK34 && temp->papel_compra != AMZO34){
+	while(decisao != GOGL34 && decisao != FBOK34 && decisao != AMZO34 && decisao != VOLTAR){
 
 		printf("\nOpção inválida.");
-		printf("De qual cotação deseja comprar?");
+		printf("\nDe qual cotação deseja comprar?");
 		printf("\n1 - GOGL34");
 		printf("\n2 - FBOK34");
-		printf("\n3 - AMZO34\n");
-		scanf("%d", &temp->papel_compra);
+		printf("\n3 - AMZO34");
+		printf("\n4 - Voltar\n");
+		scanf("%d", &decisao);
+
+	}
+
+	if(decisao == VOLTAR){
+
+		main();
+
+	}else{
+
+		temp->papel_compra = decisao;
 
 	}
 
@@ -895,8 +929,6 @@ void salvar_arquivos_compra(){
 
 	fclose(file);
 	main();
-
-
 
 }
 

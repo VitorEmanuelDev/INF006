@@ -11,6 +11,7 @@
 #define FBOK34 2
 #define AMZO34 3
 #define ARQUIVO 4
+#define VOLTAR 5
 
 
 typedef struct Compra {
