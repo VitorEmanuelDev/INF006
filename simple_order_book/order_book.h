@@ -27,19 +27,7 @@ typedef struct Venda {
     struct Venda *proxima_venda;
 } Venda;
 
-typedef struct Compra_Arq {
-	int papel_compra_arq;//cotação por empresa
-    int acoes_compra_arq;//quantas ações
-    float preco_compra_arq;
-    struct Compra_Arq *proxima_compra_arq;
-} Compra_Arq;
 
-typedef struct Venda_Arq {
-	int papel_venda_arq;//cotação por empresa
-    int acoes_venda_arq;//quantas ações
-    float preco_venda_arq;
-    struct Venda_Arq *proxima_venda_arq;
-} Venda_Arq;
 
 void main();
 void menu();
