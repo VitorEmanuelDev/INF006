@@ -6,9 +6,6 @@
 struct Compra *cabecote_compra = NULL;
 struct Venda *cabecote_venda = NULL;
 
-struct Compra_Arq *cabecote_compra_arq = NULL;
-struct Venda_Arq *cabecote_venda_arq = NULL;
-
 
 //OFERTAS
 
@@ -48,7 +45,7 @@ void listar_ofertas() {
     printf("\nQuais ações deseja visualizar?");
 	printf("\n1 - GOGL34");
 	printf("\n2 - FBOK34");
-	printf("\n3 - AMZO34\n");
+	printf("\n3 - AMZO34");
 	printf("\n4 - Ver arquivo");
 	scanf("%d", &decisao);
 
@@ -92,7 +89,7 @@ void listar_GOGL34(){
 	if(cabecote_venda == NULL || cabecote_compra == NULL) {
 
 		printf("Não há um número suficiente de ofertas no momento.");
-		menu();
+		main();
 
 	}else{
 		printf("********************************* BOOK DE PRECOS ***********************************\n\n");
@@ -121,7 +118,7 @@ void listar_GOGL34(){
 
 	}
 
-	menu();
+	main();
 
 }
 
@@ -133,7 +130,7 @@ void listar_FBOK34(){
 	if(cabecote_venda == NULL || cabecote_compra == NULL) {
 
 		printf("Não há um número suficiente de ofertas no momento.");
-		menu();
+		main();
 
 	}else{
 		printf("********************************* BOOK DE PRECOS ***********************************\n\n");
@@ -162,7 +159,7 @@ void listar_FBOK34(){
 
 	}
 
-	menu();
+	main();
 
 }
 
@@ -175,7 +172,7 @@ void listar_AMZO34(){
 	if(cabecote_venda == NULL || cabecote_compra == NULL) {
 
 		printf("Não há um número suficiente de ofertas no momento.");
-		menu();
+		main();
 
 	}else{
 		printf("********************************* BOOK DE PRECOS ***********************************\n\n");
@@ -204,7 +201,7 @@ void listar_AMZO34(){
 
 	}
 
-	menu();
+	main();
 
 }
 
@@ -221,10 +218,10 @@ void escolher_arquivos(){
 		printf("\nDeseja visualizar o banco de compras ou de vendas?\n1 - Vendas\n2 - Compras");
 		scanf("%d", &decisao );
 	}
-	printf("********************************* BOOK DE PRECOS ***********************************\n\n");
+
 		if(decisao == COMPRA){
 
-			//buscar_arquivos_compra();
+			buscar_arquivos_compra();
 
 		}else{
 
@@ -265,7 +262,7 @@ void negociar_ofertas(){
 	if(cabecote_compra == NULL || cabecote_venda == NULL) {
 
 		printf("Não há um número suficiente de ofertas no momento.");
-		menu();
+		main();
 		return;
 
 	}
@@ -313,10 +310,14 @@ void negociar_ofertas(){
 
 					}else if(decisao == NAO){
 
-						//break;
-						menu();
+						break;
+						//main();
 
 					}
+
+				}else{
+
+					printf("Não foram encontradas ofertas compatíveis.");
 
 				}
 
@@ -372,9 +373,14 @@ void negociar_ofertas(){
 
 						}else if(decisao == NAO){
 
-							menu();
+							break;
+							//main();
 
 						}
+
+					}else{
+
+						printf("Não foram encontradas ofertas compatíveis.");
 
 					}
 
@@ -432,8 +438,13 @@ void negociar_ofertas(){
 						}else if(decisao == NAO){
 
 							break;
+							//main();
 
 						}
+
+					}else{
+
+						printf("Não foram encontradas ofertas compatíveis.");
 
 					}
 
@@ -447,7 +458,7 @@ void negociar_ofertas(){
 
 		}
 
-	menu();
+	main();
 
 }
 
@@ -664,7 +675,7 @@ void ordenar_vendas(){
 		}
 	}
 	salvar_arquivos_venda();
-	//menu();
+	//main();
 
 }
 
@@ -703,18 +714,8 @@ void salvar_arquivos_venda(){
 		temp = temp->proxima_venda;
 	}
 
-	if(fwrite != 0){
-
-		fclose(file);
-		menu();
-
-	}else{
-
-		printf("Erro ao salvaar arquivo\n");
-		fclose(file);
-		menu();
-
-	}
+	fclose(file);
+	main();
 
 
 }
@@ -727,16 +728,16 @@ void buscar_arquivos_venda(){
 	if (file == NULL){
 
 		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
-		menu();
+		main();
 	}
 
 	 char ch;
-	 printf("OFERTAS DE VENDA");
+	 printf("HISTÓRICO DE PREÇOS: VENDAS\n");
 	 while ((ch = fgetc(file)) != EOF)
 	        putchar(ch);
 
    fclose(file);
-   menu();
+   main();
 
 }
 
@@ -852,7 +853,7 @@ void ordenar_compras(){
 	}
 
 	salvar_arquivos_compra();
-	//menu();
+	//main();
 
 }
 
@@ -866,7 +867,7 @@ void salvar_arquivos_compra(){
 	 if (file == NULL){
 
 		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
-		menu();
+		main();
 	}
 
 	while(temp != NULL){
@@ -891,18 +892,10 @@ void salvar_arquivos_compra(){
 		temp = temp->proxima_compra;
 	}
 
-	if(fwrite != 0){
 
-		fclose(file);
-		menu();
+	fclose(file);
+	main();
 
-	}else{
-
-		printf("Erro ao salvaar arquivo\n");
-		fclose(file);
-		menu();
-
-	}
 
 
 }
@@ -915,15 +908,15 @@ void buscar_arquivos_compra(){
 	if (file == NULL){
 
 		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
-		menu();
+		main();
 	}
 
 	 char ch;
-	 printf("PEDIDOS DE COMPRA");
+	 printf("HISTÓRICO DE PREÇOS: COMPRAS\n");
 	 while ((ch = fgetc(file)) != EOF)
 	        putchar(ch);
 
    fclose(file);
-   menu();
+   main();
 
 }
