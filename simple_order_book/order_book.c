@@ -6,6 +6,10 @@
 struct Compra *cabecote_compra = NULL;
 struct Venda *cabecote_venda = NULL;
 
+struct Compra_Arq *cabecote_compra_arq = NULL;
+struct Venda_Arq *cabecote_venda_arq = NULL;
+
+
 //OFERTAS
 
 void inserir_ofertas(){
@@ -60,22 +64,22 @@ void listar_ofertas() {
 
 	}
 	printf("********************************* BOOK DE PRECOS ***********************************\n\n");
-	if(decisao == GOGL34){
+	switch(decisao){
 
+		case GOGL34:
 		listar_GOGL34();
-
-	}else if (decisao == FBOK34){
-
+		break;
+		case FBOK34:
 		listar_FBOK34();
-
-	}else if (decisao == AMZO34){
-
+		break;
+		case AMZO34:
 		listar_AMZO34();
-
-	}else{
-
+		break;
+		case ARQUIVO:
 		escolher_arquivos();
-
+		break;
+		default:
+		break;
 	}
 
 }
@@ -92,7 +96,7 @@ void listar_GOGL34(){
 
 	}else{
 
-		while(compra_atual != NULL && venda_atual != NULL) {
+		while(compra_atual != NULL || venda_atual != NULL) {
 		//O nó atual vai apontar para o cabeçote
 			if(compra_atual->papel_compra == GOGL34) {
 
@@ -133,7 +137,7 @@ void listar_FBOK34(){
 
 	}else{
 
-		while(compra_atual != NULL && venda_atual != NULL) {
+		while(compra_atual != NULL || venda_atual != NULL) {
 		//O nó atual vai apontar para o cabeçote
 			if(compra_atual->papel_compra == FBOK34) {
 
@@ -141,7 +145,7 @@ void listar_FBOK34(){
 
 			}
 
-			if(venda_atual->papel_venda == GOGL34) {
+			if(venda_atual->papel_venda == FBOK34) {
 
 				printf("                                        | FBOK34 | VENDA | %d | %.2f |\n", venda_atual->acoes_venda, venda_atual->preco_venda);
 
@@ -175,7 +179,7 @@ void listar_AMZO34(){
 
 	}else{
 
-		while(compra_atual != NULL && venda_atual != NULL) {
+		while(compra_atual != NULL || venda_atual != NULL) {
 		//O nó atual vai apontar para o cabeçote
 			if(compra_atual->papel_compra == AMZO34) {
 
@@ -270,10 +274,12 @@ void negociar_ofertas(){
 
 		while(compra_atual != NULL) {
 
+			venda_atual = cabecote_venda;
+
 			while(venda_atual != NULL) {
 
 				if((compra_atual->preco_compra == venda_atual->preco_venda) &&
-				   (compra_atual->acoes_compra <= venda_atual->acoes_venda && compra_atual->acoes_compra != 0) &&
+				   ((compra_atual->acoes_compra <= venda_atual->acoes_venda) && compra_atual->acoes_compra > 0) &&
 				   (compra_atual->papel_compra == GOGL34 && venda_atual->papel_venda == GOGL34)) {
 
 					int decisao;
@@ -327,10 +333,12 @@ void negociar_ofertas(){
 
 			while(compra_atual != NULL) {
 
+				venda_atual = cabecote_venda;
+
 				while(venda_atual != NULL) {
 
 					if((compra_atual->preco_compra == venda_atual->preco_venda) &&
-					   (compra_atual->acoes_compra <= venda_atual->acoes_venda && compra_atual->acoes_compra != 0) &&
+					   (compra_atual->acoes_compra <= venda_atual->acoes_venda && compra_atual->acoes_compra > 0) &&
 					   (compra_atual->papel_compra == FBOK34 && venda_atual->papel_venda == FBOK34)) {
 
 						int decisao;
@@ -383,10 +391,12 @@ void negociar_ofertas(){
 
 			while(compra_atual != NULL) {
 
+				venda_atual = cabecote_venda;
+
 				while(venda_atual != NULL) {
 
 					if((compra_atual->preco_compra == venda_atual->preco_venda) &&
-					   (compra_atual->acoes_compra <= venda_atual->acoes_venda && compra_atual->acoes_compra != 0) &&
+					   (compra_atual->acoes_compra <= venda_atual->acoes_venda && compra_atual->acoes_compra > 0) &&
 					   (compra_atual->papel_compra == AMZO34 && venda_atual->papel_venda == AMZO34)) {
 
 						int decisao;
@@ -653,12 +663,13 @@ void ordenar_vendas(){
 		}
 	}
 	salvar_arquivos_venda();
+	//menu();
 
 }
 
 void salvar_arquivos_venda(){
 
-	struct Venda* temp = cabecote_venda;
+	struct Venda_Arq* temp = cabecote_venda_arq;
 
 	FILE* file;
 	file = fopen ("vendas.txt", "w");
@@ -671,8 +682,8 @@ void salvar_arquivos_venda(){
 
 	while(temp != NULL){
 
-		fwrite(temp, sizeof(struct Venda), 1, file);
-		temp = temp->proxima_venda;
+		fwrite(temp, sizeof(struct Venda_Arq), 1, file);
+		temp = temp->proxima_venda_arq;
 	}
 
 	if(fwrite != 0){
@@ -691,11 +702,11 @@ void salvar_arquivos_venda(){
 
 }
 
-struct Venda* buscar_arquivos_venda(){
+void buscar_arquivos_venda(){
 
-	struct Venda* temp = (struct Venda *)malloc(sizeof(struct Venda));;
-	struct Venda* cabecote;
-	struct Venda* cauda;
+	struct Venda_Arq* temp = (struct Venda_Arq *)malloc(sizeof(struct Venda_Arq));;
+	struct Venda_Arq* cabecote;
+	struct Venda_Arq* cauda;
 	cauda = cabecote = NULL;
 
 	FILE* file;
@@ -707,56 +718,55 @@ struct Venda* buscar_arquivos_venda(){
 		menu();
 	}
 
-	while(fread(temp, sizeof(struct Venda), 1, file)){
+	while(fread(temp, sizeof(struct Venda_Arq), 1, file)){
 
 		if(cabecote == NULL){
 
-			cabecote = cauda = (struct Venda *)malloc(sizeof(struct Venda));
+			cabecote = cauda = (struct Venda_Arq *)malloc(sizeof(struct Venda_Arq));
 
 		}else{
 
-			cauda->proxima_venda = (struct Venda *)malloc(sizeof(struct Venda));
-			cauda = cauda->proxima_venda;
+			cauda->proxima_venda_arq = (struct Venda_Arq *)malloc(sizeof(struct Venda_Arq));
+			cauda = cauda->proxima_venda_arq;
 
 		}
 
-		cauda->papel_venda = temp->papel_venda;
-		cauda->acoes_venda = temp->acoes_venda;
-		cauda->preco_venda= temp->preco_venda;
-		cauda->proxima_venda = NULL;
+		cauda->papel_venda_arq = temp->papel_venda_arq;
+		cauda->acoes_venda_arq = temp->acoes_venda_arq;
+		cauda->preco_venda_arq = temp->preco_venda_arq;
+		cauda->proxima_venda_arq = NULL;
 
 	}
 
 	fclose(file);
-
-	return(cabecote);
+	listar_arquivos_venda();
 
 
 }
 
-void listar_arquivos_venda(struct Venda *cabecote){
+void listar_arquivos_venda(){
 
-    struct Venda *temp = cabecote;
+    struct Venda_Arq *temp = cabecote_venda_arq;
 
     while(temp != NULL){
 
-    	if(temp->papel_venda == GOGL34) {
+    	if(temp->papel_venda_arq == GOGL34) {
 
-			printf("| GOGL34 | COMPRA | %d | %.2f |\n", temp->acoes_venda, temp->preco_venda);
-
-		}
-    	if(temp->papel_venda == FBOK34) {
-
-			printf("| FBOK34 | COMPRA | %d | %.2f |\n", temp->acoes_venda, temp->preco_venda);
+			printf("| GOGL34 | COMPRA | %d | %.2f |\n", temp->acoes_venda_arq, temp->preco_venda_arq);
 
 		}
-    	if(temp->papel_venda == AMZO34) {
+    	if(temp->papel_venda_arq == FBOK34) {
 
-			printf("| AMZO34 | COMPRA | %d | %.2f |\n", temp->acoes_venda, temp->preco_venda);
+			printf("| FBOK34 | COMPRA | %d | %.2f |\n", temp->acoes_venda_arq, temp->preco_venda_arq);
+
+		}
+    	if(temp->papel_venda_arq == AMZO34) {
+
+			printf("| AMZO34 | COMPRA | %d | %.2f |\n", temp->acoes_venda_arq, temp->preco_venda_arq);
 
 		}
 
-        temp = temp->proxima_venda;
+        temp = temp->proxima_venda_arq;
     }
     menu();
 }
@@ -871,12 +881,13 @@ void ordenar_compras(){
 	}
 
 	salvar_arquivos_compra();
+	//menu();
 
 }
 
 void salvar_arquivos_compra(){
 
-	struct Compra* temp = cabecote_compra;
+	struct Compra_Arq *temp = cabecote_compra_arq;
 
 	FILE* file;
 	file = fopen ("compras.txt", "w");
@@ -889,8 +900,8 @@ void salvar_arquivos_compra(){
 
 	while(temp != NULL){
 
-		fwrite(temp, sizeof(struct Compra), 1, file);
-		temp = temp->proxima_compra;
+		fwrite(temp, sizeof(struct Compra_Arq), 1, file);
+		temp = temp->proxima_compra_arq;
 	}
 
 	if(fwrite != 0){
@@ -909,11 +920,11 @@ void salvar_arquivos_compra(){
 
 }
 
-struct Compra* buscar_arquivos_compra(){
+void buscar_arquivos_compra(){
 
-	struct Compra* temp = (struct Compra *)malloc(sizeof(struct Compra));;
-	struct Compra* cabecote;
-	struct Compra* cauda;
+	struct Compra_Arq* temp = (struct Compra_Arq *)malloc(sizeof(struct Compra_Arq));;
+	struct Compra_Arq* cabecote;
+	struct Compra_Arq* cauda;
 	cauda = cabecote = NULL;
 
 	FILE* file;
@@ -925,56 +936,55 @@ struct Compra* buscar_arquivos_compra(){
 		menu();
 	}
 
-	while(fread(temp, sizeof(struct Compra), 1, file)){
+	while(fread(temp, sizeof(struct Compra_Arq), 1, file)){
 
 		if(cabecote == NULL){
 
-			cabecote = cauda = (struct Compra *)malloc(sizeof(struct Compra));
+			cabecote = cauda = (struct Compra_Arq *)malloc(sizeof(struct Compra_Arq));
 
 		}else{
 
-			cauda->proxima_compra = (struct Compra *)malloc(sizeof(struct Compra));
-			cauda = cauda->proxima_compra;
+			cauda->proxima_compra_arq = (struct Compra_Arq *)malloc(sizeof(struct Compra_Arq));
+			cauda = cauda->proxima_compra_arq;
 
 		}
 
-		cauda->papel_compra = temp->papel_compra;
-		cauda->acoes_compra = temp->acoes_compra;
-		cauda->preco_compra = temp->preco_compra;
-		cauda->proxima_compra = NULL;
+		cauda->papel_compra_arq = temp->papel_compra_arq;
+		cauda->acoes_compra_arq = temp->acoes_compra_arq;
+		cauda->preco_compra_arq = temp->preco_compra_arq;
+		cauda->proxima_compra_arq = NULL;
 
 	}
 
 	fclose(file);
-
-	return(cabecote);
+	listar_arquivos_compra();
 
 
 }
 
-void listar_arquivos_compra(struct Compra *cabecote){
+void listar_arquivos_compra(){
 
-    struct Compra *temp = cabecote;
+    struct Compra_Arq *temp = cabecote_compra_arq;
 
     while(temp!=NULL){
 
-    	if(temp->papel_compra == GOGL34) {
+    	if(temp->papel_compra_arq == GOGL34) {
 
-			printf("| GOGL34 | COMPRA | %d | %.2f |\n", temp->acoes_compra, temp->preco_compra);
-
-		}
-    	if(temp->papel_compra == FBOK34) {
-
-			printf("| FBOK34 | COMPRA | %d | %.2f |\n", temp->acoes_compra, temp->preco_compra);
+			printf("| GOGL34 | COMPRA | %d | %.2f |\n", temp->acoes_compra_arq, temp->preco_compra_arq);
 
 		}
-    	if(temp->papel_compra == AMZO34) {
+    	if(temp->papel_compra_arq == FBOK34) {
 
-			printf("| AMZO34 | COMPRA | %d | %.2f |\n", temp->acoes_compra, temp->preco_compra);
+			printf("| FBOK34 | COMPRA | %d | %.2f |\n", temp->acoes_compra_arq, temp->preco_compra_arq);
+
+		}
+    	if(temp->papel_compra_arq == AMZO34) {
+
+			printf("| AMZO34 | COMPRA | %d | %.2f |\n", temp->acoes_compra_arq, temp->preco_compra_arq);
 
 		}
 
-        temp = temp->proxima_compra;
+        temp = temp->proxima_compra_arq;
     }
     menu();
 }
