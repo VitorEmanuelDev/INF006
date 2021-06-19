@@ -93,7 +93,7 @@ void listar_GOGL34(){
 
 	if(cabecote_venda == NULL || cabecote_compra == NULL) {
 
-		printf("Não há um número suficiente de ofertas no momento.");
+		printf("Não há um número suficiente de ofertas no momento.\n");
 		main();
 
 	}else{
@@ -134,7 +134,7 @@ void listar_FBOK34(){
 
 	if(cabecote_venda == NULL || cabecote_compra == NULL) {
 
-		printf("Não há um número suficiente de ofertas no momento.");
+		printf("Não há um número suficiente de ofertas no momento.\n");
 		main();
 
 	}else{
@@ -176,7 +176,7 @@ void listar_AMZO34(){
 
 	if(cabecote_venda == NULL || cabecote_compra == NULL) {
 
-		printf("Não há um número suficiente de ofertas no momento.");
+		printf("Não há um número suficiente de ofertas no momento.\n");
 		main();
 
 	}else{
@@ -268,7 +268,7 @@ void negociar_ofertas(){
 
 	if(cabecote_compra == NULL || cabecote_venda == NULL) {
 
-		printf("Não há um número suficiente de ofertas no momento.");
+		printf("Não há um número suficiente de ofertas no momento.\n");
 		main();
 		return;
 
@@ -324,7 +324,7 @@ void negociar_ofertas(){
 
 				}else{
 
-					printf("Não foram encontradas ofertas compatíveis.");
+					printf("Não foram encontradas ofertas compatíveis.\n");
 
 				}
 
@@ -387,7 +387,7 @@ void negociar_ofertas(){
 
 					}else{
 
-						printf("Não foram encontradas ofertas compatíveis.");
+						printf("Não foram encontradas ofertas compatíveis.\n");
 
 					}
 
@@ -451,7 +451,7 @@ void negociar_ofertas(){
 
 					}else{
 
-						printf("Não foram encontradas ofertas compatíveis.");
+						printf("Não foram encontradas ofertas compatíveis.\n");
 
 					}
 
@@ -478,7 +478,7 @@ void eliminar_ofertas(int posicao_venda, int valor_venda, int posicao_compra, in
 
 		if(cabecote_compra == NULL){
 
-			printf("Lista vazia");
+			printf("Lista vazia\n");
 			return;
 
 		}else{
@@ -514,7 +514,7 @@ void eliminar_ofertas(int posicao_venda, int valor_venda, int posicao_compra, in
 
 			if(cabecote_venda == NULL){
 
-				printf("Lista vazia");
+				printf("Lista vazia\n");
 				return;
 
 			}else{
@@ -565,7 +565,7 @@ void finalizar_sessao(){
 		  free(temp_venda);
 	 }
 
-	 printf("\nAté mais!");
+	 printf("\nAté mais!\n");
 	 exit(0);
 }
 
@@ -580,7 +580,7 @@ void inserir_venda(){
 	temp = (struct Venda *)malloc(sizeof(struct Venda));
 
 	if(temp == NULL){
-		printf("Espaço fora da memória.");
+		printf("Espaço fora da memória.\n");
 		return;
 	}
 
@@ -620,7 +620,7 @@ void inserir_venda(){
 
 	while(temp->preco_venda < 0){
 
-		printf("\nValor deve ser positivo.");
+		printf("Valor deve ser positivo.\n");
 		printf("Qual o preço de venda das ações?\n");
 		scanf("%f",&temp->preco_venda);
 
@@ -631,7 +631,7 @@ void inserir_venda(){
 
 	while(temp->acoes_venda < 0){
 
-		printf("\nValor deve ser positivo.");
+		printf("Valor deve ser positivo.\n");
 		printf("Quantas ações pelo preço informado?\n");
 		scanf("%d",&temp->acoes_venda);
 
@@ -772,13 +772,13 @@ void inserir_compra(){
 	temp = (struct Compra *)malloc(sizeof(struct Compra));
 
 	if(temp == NULL){
-		printf("Espaço fora da memória.");
+		printf("Espaço fora da memória.\n");
 		return;
 	}
 
 	int decisao;
 
-	printf("De qual cotação deseja comprar?");
+	printf("\nDe qual cotação deseja comprar?");
 	printf("\n1 - GOGL34");
 	printf("\n2 - FBOK34");
 	printf("\n3 - AMZO34");
@@ -900,7 +900,7 @@ void salvar_arquivos_compra(){
 
 	 if (file == NULL){
 
-		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
+		fprintf(stderr, "Não foi possível abrir o arquivo.\n");
 		main();
 	}
 
@@ -939,7 +939,7 @@ void buscar_arquivos_compra(){
 
 	if (file == NULL){
 
-		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
+		fprintf(stderr, "Não foi possível abrir o arquivo.\n");
 		main();
 	}
 
@@ -952,3 +952,4 @@ void buscar_arquivos_compra(){
    main();
 
 }
+
