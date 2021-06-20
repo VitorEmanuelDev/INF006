@@ -3,10 +3,9 @@
 
 #include "order_book.h"
 
+
 struct Compra *cabecote_compra = NULL;
 struct Venda *cabecote_venda = NULL;
-
-
 //OFERTAS
 
 void inserir_ofertas(){
@@ -224,15 +223,15 @@ void escolher_arquivos(){
 		scanf("%d", &decisao );
 	}
 
-		if(decisao == COMPRA){
+	if(decisao == COMPRA){
 
-			buscar_arquivos_compra();
+		buscar_arquivos_compra();
 
-		}else{
+	}else{
 
-			buscar_arquivos_venda();
+		buscar_arquivos_venda();
 
-		}
+	}
 
 
 }
@@ -244,27 +243,9 @@ void negociar_ofertas(){
 	//O nó atual vai apontar para o cabeçote
 	struct Compra *compra_atual = cabecote_compra;
 	struct Venda *venda_atual = cabecote_venda;
-	int decisao;
-	int posicao_compra = 0, posicao_venda = 0;
+	int papel, acoes, operacao;
+	float preco;
 
-	printf("\nQuais ações deseja negociar?");
-	printf("\n1 - GOGL34");
-	printf("\n2 - FBOK34");
-	printf("\n3 - AMZO34");
-	printf("\n4 - Voltar\n");
-	scanf("%d", &decisao);
-
-	while(decisao != GOGL34 && decisao != FBOK34 && decisao != AMZO34 && decisao != VOLTAR){
-
-		printf("\nOpção inválida.");
-		printf("\nQuais ações deseja comprar?");
-		printf("\n1 - GOGL34");
-		printf("\n2 - FBOK34");
-		printf("\n3 - AMZO34");
-		printf("\n4 - Voltar\n");
-		scanf("%d", &decisao);
-
-	}
 
 	if(cabecote_compra == NULL || cabecote_venda == NULL) {
 
@@ -274,40 +255,127 @@ void negociar_ofertas(){
 
 	}
 
-	if(decisao == GOGL34){
+	printf("\nQuais ações deseja negociar?");
+	printf("\n1 - GOGL34");
+	printf("\n2 - FBOK34");
+	printf("\n3 - AMZO34");
+	printf("\n4 - Voltar\n");
+	scanf("%d", &papel);
+
+	while(papel != GOGL34 && papel != FBOK34 && papel != AMZO34 && papel != VOLTAR){
+
+		printf("\nOpção inválida.");
+		printf("\nQuais ações deseja negociar?");
+		printf("\n1 - GOGL34");
+		printf("\n2 - FBOK34");
+		printf("\n3 - AMZO34");
+		printf("\n4 - Voltar\n");
+		scanf("%d", &papel);
+
+	}
+
+	if (papel == VOLTAR)
+			main();
+
+	printf("\nQuantas ações deseja negociar?");
+	scanf("%d", &acoes);
+
+	while(acoes < 0){
+
+		printf("\nQuantas ações deseja negociar?");
+		scanf("%d", &acoes);
+
+	}
+
+	printf("\nA qual preço?");
+	scanf("%f", &preco);
+
+	while(acoes < 0){
+
+		printf("\nA qual preço?");
+		scanf("%f", &preco);
+
+	}
+
+	printf("\nQual operação deseja realizar?\n1 - Venda\n2 - Compra");
+	scanf("%d", &operacao);
+
+	while(operacao != VENDA && operacao != COMPRA){
+
+		printf("\nQual operação deseja realizar?");
+		scanf("%d", &operacao);
+
+	}
+
+	int posicao_compra = 0, posicao_venda = 0;
+
+	if(operacao == VENDA){
+
+		int flag = 0;
+
+		while(venda_atual != NULL){
+
+			if(venda_atual->preco_venda == preco &&
+				venda_atual->papel_venda == papel) {
+
+				flag = 1;
+				break;
+			}
+			venda_atual = venda_atual->proxima_venda;
+			posicao_venda++;
+
+		}
+
+		if(flag == 0){
+
+			printf("Seu pedido de venda ainda não foi cadastrado online.\nPor favor, informe um pedido antes de acionar uma negociação.\n");
+			main();
+
+		}
 
 		while(compra_atual != NULL) {
 
-			venda_atual = cabecote_venda;
+			if(	compra_atual->preco_compra == preco &&
+				compra_atual->acoes_compra > 0 &&
+				compra_atual->papel_compra == papel) {
 
-			while(venda_atual != NULL) {
+				int decisao;
+				printf("Encontramos um match para o seu preço de venda\nDeseja realizar esta negociação?\n1 - Sim\n2 - Não\n");
+				printf("| COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
+				scanf("%d", &decisao);
 
-				if((compra_atual->preco_compra == venda_atual->preco_venda) &&
-				   ((compra_atual->acoes_compra <= venda_atual->acoes_venda) && compra_atual->acoes_compra > 0) &&
-				   (compra_atual->papel_compra == GOGL34 && venda_atual->papel_venda == GOGL34)) {
+				while(decisao != SIM && decisao != NAO){
 
-					int decisao;
-					printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
-					printf("| GOGL34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
+					printf("Opção inválida.\n");
+					printf("Deseja realizar esta venda?\n1 - Sim\n2 - Não\n");
+					printf("| COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
 					scanf("%d", &decisao);
+				}
 
-					while(decisao != SIM && decisao != NAO){
+				int valor_compra;
+				int valor_venda;
 
-						printf("Opção inválida.\n");
-						printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
-						printf("| GOGL34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
-						scanf("%d", &decisao);
-					}
+				if(decisao == SIM){
 
-					if(decisao == SIM){
-						printf("Cotação GOGL34:");
+					if(papel == GOGL34){
+
 						printf("| GOGL34 | ÚLTIMO PREÇO NEGOCIADO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
 
-						venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
-						int valor_venda = venda_atual->acoes_venda;
+						if(compra_atual->acoes_compra <= venda_atual->acoes_venda){
 
-						int valor_compra = compra_atual->acoes_compra = 0;
+							venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
 
+							valor_venda = venda_atual->acoes_venda;
+							valor_compra = compra_atual->acoes_compra = 0;
+
+						}else{
+
+							compra_atual->acoes_compra = compra_atual->acoes_compra - venda_atual->acoes_venda;
+
+							valor_compra = compra_atual->acoes_compra;
+							valor_venda = venda_atual->acoes_venda = 0;
+
+						}
 
 						if(valor_venda == 0 || valor_compra == 0){
 
@@ -315,155 +383,221 @@ void negociar_ofertas(){
 
 						}
 
-					}else if(decisao == NAO){
+					}
 
-						break;
-						//main();
+					if(papel == FBOK34){
+
+						printf("| FBOK34 | ÚLTIMO PREÇO NEGOCIADO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
+
+						if(compra_atual->acoes_compra <= venda_atual->acoes_venda){
+
+							venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
+
+							valor_venda = venda_atual->acoes_venda;
+							valor_compra = compra_atual->acoes_compra = 0;
+
+						}else{
+
+							compra_atual->acoes_compra = compra_atual->acoes_compra - venda_atual->acoes_venda;
+
+							valor_compra = compra_atual->acoes_compra;
+							valor_venda = venda_atual->acoes_venda = 0;
+
+						}
+
+						if(valor_venda == 0 || valor_compra == 0){
+
+							eliminar_ofertas(posicao_venda, valor_venda, posicao_compra, valor_compra);
+
+						}
+
+					}
+
+					if(papel == AMZO34){
+
+						printf("| AMZO34 | ÚLTIMO PREÇO NEGOCIADO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
+
+						if(compra_atual->acoes_compra <= venda_atual->acoes_venda){
+
+							venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
+
+							valor_venda = venda_atual->acoes_venda;
+							valor_compra = compra_atual->acoes_compra = 0;
+
+						}else{
+
+							compra_atual->acoes_compra = compra_atual->acoes_compra - venda_atual->acoes_venda;
+
+							valor_compra = compra_atual->acoes_compra;
+							valor_venda = venda_atual->acoes_venda = 0;
+
+						}
+
+						if(valor_venda == 0 || valor_compra == 0){
+
+							eliminar_ofertas(posicao_venda, valor_venda, posicao_compra, valor_compra);
+
+						}
 
 					}
 
 				}else{
 
-					printf("Não foram encontradas ofertas compatíveis.\n");
+					main();
 
 				}
 
-				posicao_venda++;
-				venda_atual = venda_atual->proxima_venda;
 			}
-
 			posicao_compra++;
 			compra_atual = compra_atual->proxima_compra;
 		}
 
 	}
 
-	if(decisao == FBOK34){
+	if(operacao == COMPRA){
 
-			while(compra_atual != NULL) {
+		int flag = 0;
 
-				venda_atual = cabecote_venda;
+		while(compra_atual != NULL){
 
-				while(venda_atual != NULL) {
+			if(compra_atual->preco_compra == preco &&
+			   compra_atual->papel_compra == papel) {
 
-					if((compra_atual->preco_compra == venda_atual->preco_venda) &&
-					   (compra_atual->acoes_compra <= venda_atual->acoes_venda && compra_atual->acoes_compra > 0) &&
-					   (compra_atual->papel_compra == FBOK34 && venda_atual->papel_venda == FBOK34)) {
+				flag = 1;
+				break;
 
-						int decisao;
-						printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
-						printf("| FBOK34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
-						scanf("%d", &decisao);
-
-						while(decisao != SIM && decisao != NAO){
-
-							printf("Opção inválida.\n");
-							printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
-							printf("| FBOK34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
-							scanf("%d", &decisao);
-						}
-
-						if(decisao == SIM){
-							printf("Cotação FBOK34:");
-							printf("| FBOK34 | ÚLTIMO PREÇO NEGOCIADO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
-
-							venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
-							int valor_venda = venda_atual->acoes_venda;
-
-							int valor_compra = compra_atual->acoes_compra = 0;
-
-							if(valor_venda == 0 || valor_compra == 0){
-
-								eliminar_ofertas(posicao_venda, valor_venda, posicao_compra, valor_compra);
-
-							}
-
-						}else if(decisao == NAO){
-
-							break;
-							//main();
-
-						}
-
-					}else{
-
-						printf("Não foram encontradas ofertas compatíveis.\n");
-
-					}
-
-					posicao_venda++;
-					venda_atual = venda_atual->proxima_venda;
-				}
-
-				posicao_compra++;
-				compra_atual = compra_atual->proxima_compra;
 			}
+			compra_atual = compra_atual->proxima_compra;
+			posicao_compra++;
+		}
+
+		if(flag == 0){
+
+			printf("Seu pedido de compra ainda não foi cadastrado online.\nPor favor, informe um pedido antes de acionar uma negociação.\n");
+			main();
 
 		}
 
-	if(decisao == AMZO34){
+		int valor_compra;
+		int valor_venda;
 
-			while(compra_atual != NULL) {
+		while(venda_atual != NULL) {
 
-				venda_atual = cabecote_venda;
+			if(venda_atual->preco_venda == preco &&
+				venda_atual->acoes_venda > 0 &&
+				venda_atual->papel_venda == papel) {
 
-				while(venda_atual != NULL) {
+				int decisao;
+				printf("Encontramos um match para o seu preço de compra\nDeseja realizar esta negociação?\n1 - Sim\n2 - Não\n");
+				printf("| COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
+				scanf("%d", &decisao);
 
-					if((compra_atual->preco_compra == venda_atual->preco_venda) &&
-					   (compra_atual->acoes_compra <= venda_atual->acoes_venda && compra_atual->acoes_compra > 0) &&
-					   (compra_atual->papel_compra == AMZO34 && venda_atual->papel_venda == AMZO34)) {
+				while(decisao != SIM && decisao != NAO){
 
-						int decisao;
-						printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
-						printf("| AMZO34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
-						scanf("%d", &decisao);
+					printf("Opção inválida.\n");
+					printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
+					printf("| COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
+					scanf("%d", &decisao);
+				}
 
-						while(decisao != SIM && decisao != NAO){
+				if(decisao == SIM){
 
-							printf("Opção inválida.\n");
-							printf("Deseja realizar esta compra?\n1 - Sim\n2 - Não\n");
-							printf("| AMZO34 | COMPRA | %d | %.2f | VENDA | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra, venda_atual->acoes_venda, venda_atual->preco_venda);
-							scanf("%d", &decisao);
-						}
+					if(papel == GOGL34){
 
-						if(decisao == SIM){
-							printf("Cotação AMZO34:");
-							printf("| AMZO34 | ÚLTIMO PREÇO NEGOCIADO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
+						printf("| GOGL34 | ÚLTIMO PREÇO NEGOCIADO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
 
-							venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
-							int valor_venda = venda_atual->acoes_venda;
+						if(compra_atual->acoes_compra <= venda_atual->acoes_venda){
 
-							int valor_compra = compra_atual->acoes_compra = 0;
+						venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
 
-							if(valor_venda == 0 || valor_compra == 0){
+							valor_venda = venda_atual->acoes_venda;
+							valor_compra = compra_atual->acoes_compra = 0;
 
-								eliminar_ofertas(posicao_venda, valor_venda, posicao_compra, valor_compra);
+						}else{
 
-							}
+							compra_atual->acoes_compra = compra_atual->acoes_compra - venda_atual->acoes_venda;
 
-
-						}else if(decisao == NAO){
-
-							break;
-							//main();
+							valor_compra = compra_atual->acoes_compra;
+							valor_venda = venda_atual->acoes_venda = 0;
 
 						}
 
-					}else{
+						if(valor_venda == 0 || valor_compra == 0){
 
-						printf("Não foram encontradas ofertas compatíveis.\n");
+							eliminar_ofertas(posicao_venda, valor_venda, posicao_compra, valor_compra);
+
+						}
 
 					}
 
-					posicao_venda++;
-					venda_atual = venda_atual->proxima_venda;
+					if(papel == FBOK34){
+
+						printf("| FBOK34 | ÚLTIMO PREÇO NEGOCIADO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
+
+						if(compra_atual->acoes_compra <= venda_atual->acoes_venda){
+
+							venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
+
+							valor_venda = venda_atual->acoes_venda;
+							valor_compra = compra_atual->acoes_compra = 0;
+
+						}else{
+
+							compra_atual->acoes_compra = compra_atual->acoes_compra - venda_atual->acoes_venda;
+
+							valor_compra = compra_atual->acoes_compra;
+							valor_venda = venda_atual->acoes_venda = 0;
+
+						}
+
+						if(valor_venda == 0 || valor_compra == 0){
+
+							eliminar_ofertas(posicao_venda, valor_venda, posicao_compra, valor_compra);
+
+						}
+
+					}
+
+					if(papel == AMZO34){
+
+						printf("| AMZO34 | ÚLTIMO PREÇO NEGOCIADO | %d | %.2f |\n", compra_atual->acoes_compra, compra_atual->preco_compra);
+
+						if(compra_atual->acoes_compra <= venda_atual->acoes_venda){
+
+							venda_atual->acoes_venda = venda_atual->acoes_venda - compra_atual->acoes_compra;
+
+							valor_venda = venda_atual->acoes_venda;
+							valor_compra = compra_atual->acoes_compra = 0;
+
+						}else{
+
+							compra_atual->acoes_compra = compra_atual->acoes_compra - venda_atual->acoes_venda;
+
+							valor_compra = compra_atual->acoes_compra;
+							valor_venda = venda_atual->acoes_venda = 0;
+
+						}
+
+						if(valor_venda == 0 || valor_compra == 0){
+
+							eliminar_ofertas(posicao_venda, valor_venda, posicao_compra, valor_compra);
+
+						}
+
+					}
+
+				}else{
+
+					main();
+
 				}
 
-				posicao_compra++;
-				compra_atual = compra_atual->proxima_compra;
 			}
-
+			posicao_venda++;
+			venda_atual = venda_atual->proxima_venda;
 		}
+
+	}
 
 	main();
 
@@ -704,7 +838,7 @@ void salvar_arquivos_venda(){
 	struct Venda *temp = cabecote_venda;
 
 	FILE* file;
-	file = fopen ("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/vendas.txt", "a");
+	file = fopen ("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/historico_vendas.txt", "a");
 
 	 if (file == NULL){
 
@@ -743,7 +877,7 @@ void salvar_arquivos_venda(){
 void buscar_arquivos_venda(){
 
 	FILE* file;
-	file = fopen("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/vendas.txt","r");
+	file = fopen("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/historico_vendas.txt","r");
 
 	if (file == NULL){
 
@@ -896,7 +1030,7 @@ void salvar_arquivos_compra(){
 	struct Compra *temp = cabecote_compra;
 
 	FILE* file;
-	file = fopen ("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/compras.txt", "a");
+	file = fopen ("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/historico_compras.txt", "a");
 
 	 if (file == NULL){
 
@@ -935,7 +1069,7 @@ void salvar_arquivos_compra(){
 void buscar_arquivos_compra(){
 
 	FILE* file;
-	file = fopen("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/compras.txt","r");
+	file = fopen("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/historico_compras.txt","r");
 
 	if (file == NULL){
 
@@ -950,6 +1084,6 @@ void buscar_arquivos_compra(){
 
    fclose(file);
    main();
-
 }
+
 

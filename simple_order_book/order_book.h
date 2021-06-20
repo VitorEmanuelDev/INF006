@@ -30,8 +30,8 @@ typedef struct Venda {
 
 
 
-void main();
-void menu();
+
+int main();
 void finalizar_sessao();
 void inserir_ofertas();
 void inserir_venda();

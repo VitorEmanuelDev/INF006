@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "order_book.h"
+
+
 int main(){
 
 	int escolher;
@@ -35,5 +38,3 @@ int main(){
 	return 0;
 
 }
-
-
