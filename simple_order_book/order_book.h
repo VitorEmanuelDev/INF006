@@ -29,9 +29,12 @@ typedef struct Venda {
 } Venda;
 
 
-
-
 int main();
+int menu();
+void carregar_arquivo_compras();
+void carregar_arquivo_vendas();
+void popular_lista_compras(int papel, int acoes, float preco);
+void popular_lista_vendas(int papel, int acoes, float preco);
 void finalizar_sessao();
 void inserir_ofertas();
 void inserir_venda();

@@ -6,6 +6,9 @@
 
 int main(){
 
+	carregar_arquivo_compras();
+	carregar_arquivo_vendas();
+
 	int escolher;
 
 	while(1){
@@ -28,7 +31,6 @@ int main(){
 			break;
 			case 4:
 			finalizar_sessao();
-			exit(0);
 			break;
 			default:
 			printf("Escolha Inválida.");
