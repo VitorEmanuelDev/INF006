@@ -18,6 +18,7 @@ int main(){
 		printf("\n3 - Negociar ofertas");
 		printf("\n4 - Sair");
 		scanf("%d",&escolher);
+		fflush(stdin);
 		switch(escolher){
 
 			case 1:
