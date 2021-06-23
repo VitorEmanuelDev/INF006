@@ -45,8 +45,6 @@ void listar_AMZO34();
 void ordenar_vendas();
 void ordenar_compras();
 void escolher_arquivos();
-void listar_arquivos_compra();
-void listar_arquivos_venda();
 void buscar_arquivos_compra();
 void buscar_arquivos_venda();
 void salvar_arquivos_compra();
