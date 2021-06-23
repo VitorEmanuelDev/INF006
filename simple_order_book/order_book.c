@@ -287,7 +287,6 @@ void negociar_ofertas(){
 
 		printf("Não há um número suficiente de ofertas no momento.\n");
 		menu();
-		return;
 
 	}
 
@@ -650,8 +649,8 @@ void eliminar_ofertas(int posicao_venda, int valor_venda, int posicao_compra, in
 
 		if(cabecote_compra == NULL){
 
-			printf("Lista vazia\n");
-			return;
+			printf("Lista vazia. (delete)\n");
+			menu();
 
 		}else{
 
@@ -686,7 +685,7 @@ void eliminar_ofertas(int posicao_venda, int valor_venda, int posicao_compra, in
 
 			if(cabecote_venda == NULL){
 
-				printf("Lista vazia\n");
+				printf("Lista vazia (delete)\n");
 				return;
 
 			}else{
@@ -753,9 +752,9 @@ void carregar_arquivo_compras(){
 
     if(file == NULL){
 
-	 printf("Não foi possível abrir o arquivo.\n");
+    	printf("Não foi possível abrir o arquivo.\n");
 
-   }
+    }
 
 
     while (fscanf(file, "%d %d %f", &papel, &acoes, &preco) != EOF ){
@@ -779,9 +778,43 @@ void popular_lista_compras(int papel, int acoes, float preco){
 	temp->preco_compra = preco;
 	temp->proxima_compra = NULL;
 
+	struct Compra *atual = cabecote_compra, *indice = NULL;
+
+	int swap;
+	float swap_f;
+
 	if (cabecote_compra == NULL){
 		cabecote_compra = temp;
 		return;
+
+	}else{
+
+		while(atual != NULL) {
+		//O nó atual vai apontar para o cabeçote
+
+			indice = atual->proxima_compra;
+
+			while(indice != NULL) {
+
+				if(atual->preco_compra < indice->preco_compra) {
+
+					swap_f = atual->preco_compra;
+					atual->preco_compra = indice->preco_compra;
+					indice->preco_compra = swap_f;
+
+					swap = atual->acoes_compra;
+					atual->acoes_compra  = indice->acoes_compra;
+					indice->acoes_compra = swap;
+
+					swap = atual->papel_compra;
+					atual->papel_compra =  indice->papel_compra;
+					indice->papel_compra = swap;
+
+				}
+				indice = indice->proxima_compra;
+			}
+			atual = atual->proxima_compra;
+		}
 	}
 
 
@@ -885,10 +918,12 @@ void ordenar_compras(){
 	struct Compra *atual = cabecote_compra, *indice = NULL;
 
 	int temp;
+	float temp_f;
 
 	if(cabecote_compra == NULL) {
 
-		return;
+		printf("Sem espaço alocado em memória. (sort)\n");
+		menu();
 
 	}else{
 
@@ -901,9 +936,9 @@ void ordenar_compras(){
 
 				if(atual->preco_compra < indice->preco_compra) {
 
-					temp = atual->preco_compra;
+					temp_f = atual->preco_compra;
 					atual->preco_compra = indice->preco_compra;
-					indice->preco_compra = temp;
+					indice->preco_compra = temp_f;
 
 					temp = atual->acoes_compra;
 					atual->acoes_compra  = indice->acoes_compra;
@@ -1021,10 +1056,43 @@ void popular_lista_vendas(int papel, int acoes, float preco){
 	temp->preco_venda = preco;
 	temp->proxima_venda = NULL;
 
+	struct Venda *atual = cabecote_venda, *indice = NULL;
+
+	int swap;
+	float swap_f;
 
 	if (cabecote_venda == NULL){
 		cabecote_venda = temp;
 		return;
+
+	}else{
+
+		while(atual != NULL) {
+		//O nó atual vai apontar para o cabeçote
+
+			indice = atual->proxima_venda;
+
+			while(indice != NULL) {
+
+				if(atual->preco_venda > indice->preco_venda) {
+
+					swap_f = atual->preco_venda;
+					atual->preco_venda = indice->preco_venda;
+					indice->preco_venda = swap_f;
+
+					swap = atual->acoes_venda;
+					atual->acoes_venda  = indice->acoes_venda;
+					indice->acoes_venda = swap;
+
+					swap = atual->papel_venda;
+					atual->papel_venda =  indice->papel_venda;
+					indice->papel_venda = swap;
+
+				}
+				indice = indice->proxima_venda;
+			}
+			atual = atual->proxima_venda;
+		}
 	}
 
 
@@ -1131,10 +1199,12 @@ void ordenar_vendas(){
 	struct Venda *atual = cabecote_venda, *indice = NULL;
 
 	int temp;
+	float temp_f;
 
 	if(cabecote_venda == NULL) {
 
-		return;
+		printf("Sem espaço alocado em memória. (sort)\n");
+		menu();
 
 	}else{
 
@@ -1147,9 +1217,9 @@ void ordenar_vendas(){
 
 				if(atual->preco_venda > indice->preco_venda) {
 
-					temp = atual->preco_venda;
+					temp_f = atual->preco_venda;
 					atual->preco_venda = indice->preco_venda;
-					indice->preco_venda = temp;
+					indice->preco_venda = temp_f;
 
 					temp = atual->acoes_venda;
 					atual->acoes_venda  = indice->acoes_venda;
@@ -1180,7 +1250,7 @@ void salvar_arquivos_venda(){
 
 	 if (file == NULL){
 
-		fprintf(stderr, "Não foi possível abrir o arquivo.\n");
+		fprintf(stderr, "Não foi possível abrir o arquivo.(venda)\n");
 		menu();
 	}
 
