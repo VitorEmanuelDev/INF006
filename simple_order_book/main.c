@@ -9,6 +9,7 @@ int main(){
 	carregar_arquivo_compras();
 	carregar_arquivo_vendas();
 
+
 	int escolher;
 
 	while(1){

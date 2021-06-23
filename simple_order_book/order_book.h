@@ -10,8 +10,8 @@
 #define GOGL34 1
 #define FBOK34 2
 #define AMZO34 3
-#define ARQUIVO 4
-#define VOLTAR 5
+#define VOLTAR 4
+#define ARQUIVO 5
 
 
 typedef struct Compra {
@@ -29,7 +29,6 @@ typedef struct Venda {
 } Venda;
 
 
-int main();
 int menu();
 void carregar_arquivo_compras();
 void carregar_arquivo_vendas();
