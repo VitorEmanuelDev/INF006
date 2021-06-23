@@ -135,8 +135,8 @@ void listar_GOGL34(){
 		menu();
 
 	}else{
-		printf("PEDIDOS DE COMPRA\n\n");
-		while(compra_atual != NULL) {
+		printf("**************************** BOOK DE PRECOS ***************************\n\n");
+		while(compra_atual != NULL && venda_atual != NULL) {
 		//O nó atual vai apontar para o cabeçote
 			if(compra_atual->papel_compra == GOGL34) {
 
@@ -144,22 +144,19 @@ void listar_GOGL34(){
 
 			}
 
-			compra_atual = compra_atual->proxima_compra;
-
-		}
-		printf("\n\n");
-		printf("PEDIDOS DE VENDA\n\n");
-		while(venda_atual != NULL) {
-		//O nó atual vai apontar para o cabeçote
-
 			if(venda_atual->papel_venda == GOGL34) {
 
-				printf("| GOGL34 | VENDA | %d | %.2f |\n", venda_atual->acoes_venda, venda_atual->preco_venda);
+				printf("                                        | GOGL34 | VENDA | %d | %.2f |\n", venda_atual->acoes_venda, venda_atual->preco_venda);
 
 			}
 
-			venda_atual = venda_atual->proxima_venda;
+			if(venda_atual != NULL){
+				venda_atual = venda_atual->proxima_venda;
+			}
 
+			if(compra_atual != NULL){
+				compra_atual = compra_atual->proxima_compra;
+			}
 		}
 	}
 	menu();
@@ -178,8 +175,8 @@ void listar_FBOK34(){
 		menu();
 
 	}else{
-		printf("PEDIDOS DE COMPRA\n\n");
-		while(compra_atual != NULL) {
+		printf("**************************** BOOK DE PRECOS ***************************\n\n");
+		while(compra_atual != NULL && venda_atual != NULL) {
 		//O nó atual vai apontar para o cabeçote
 			if(compra_atual->papel_compra == FBOK34) {
 
@@ -187,23 +184,20 @@ void listar_FBOK34(){
 
 			}
 
-			compra_atual = compra_atual->proxima_compra;
-
-		}
-		printf("PEDIDOS DE VENDA\n\n");
-		while(venda_atual != NULL) {
-		//O nó atual vai apontar para o cabeçote
-
 			if(venda_atual->papel_venda == FBOK34) {
 
-				printf("| FBOK34 | VENDA | %d | %.2f |\n", venda_atual->acoes_venda, venda_atual->preco_venda);
+				printf("                                        | FBOK34 | VENDA | %d | %.2f |\n", venda_atual->acoes_venda, venda_atual->preco_venda);
 
 			}
 
-			venda_atual = venda_atual->proxima_venda;
+			if(venda_atual != NULL){
+				venda_atual = venda_atual->proxima_venda;
+			}
 
+			if(compra_atual != NULL){
+				compra_atual = compra_atual->proxima_compra;
+			}
 		}
-
 	}
 	menu();
 
@@ -221,8 +215,8 @@ void listar_AMZO34(){
 		menu();
 
 	}else{
-		printf("PEDIDOS DE COMPRA\n\n");
-		while(compra_atual != NULL) {
+		printf("**************************** BOOK DE PRECOS ***************************\n\n");
+		while(compra_atual != NULL && venda_atual != NULL) {
 		//O nó atual vai apontar para o cabeçote
 			if(compra_atual->papel_compra == AMZO34) {
 
@@ -230,23 +224,20 @@ void listar_AMZO34(){
 
 			}
 
-			compra_atual = compra_atual->proxima_compra;
-
-		}
-		printf("PEDIDOS DE VENDA\n\n");
-		while(venda_atual != NULL) {
-		//O nó atual vai apontar para o cabeçote
-
 			if(venda_atual->papel_venda == AMZO34) {
 
 				printf("                                        | AMZO34 | VENDA | %d | %.2f |\n", venda_atual->acoes_venda, venda_atual->preco_venda);
 
 			}
 
-			venda_atual = venda_atual->proxima_venda;
+			if(venda_atual != NULL){
+				venda_atual = venda_atual->proxima_venda;
+			}
 
+			if(compra_atual != NULL){
+				compra_atual = compra_atual->proxima_compra;
+			}
 		}
-
 	}
 	menu();
 
@@ -1241,6 +1232,7 @@ void buscar_arquivos_venda(){
    menu();
 
 }
+
 
 
 
