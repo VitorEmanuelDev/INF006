@@ -94,7 +94,7 @@ void listar_ofertas() {
 		printf("\n1 - GOGL34");
 		printf("\n2 - FBOK34");
 		printf("\n3 - AMZO34");
-		printf("\n4 - Voltar\n");
+		printf("\n4 - Voltar");
 		printf("\n5 - Ver arquivo");
 		scanf("%d", &decisao);
 
@@ -969,7 +969,7 @@ void salvar_arquivos_compra(){
 
 	 if (file == NULL){
 
-		fprintf(stderr, "Não foi possível abrir o arquivo.\n");
+		printf(stderr, "Não foi possível abrir o arquivo.\n");
 		menu();
 	}
 
@@ -989,9 +989,8 @@ void salvar_arquivos_compra(){
 
 		}
 
-		fprintf(file," %d |",temp->acoes_compra);
-		fprintf(file," %.2f |",temp->preco_compra);
-		fprintf(file,"\n");
+		fprintf(file," %d | %.2f |\n",temp->acoes_compra,temp->preco_compra);
+
 		temp = temp->proxima_compra;
 	}
 
@@ -1007,7 +1006,7 @@ void buscar_arquivos_compra(){
 
 	if (file == NULL){
 
-		fprintf(stderr, "Não foi possível abrir o arquivo.\n");
+		printf(stderr, "Não foi possível abrir o arquivo.\n");
 		menu();
 	}
 
@@ -1250,7 +1249,7 @@ void salvar_arquivos_venda(){
 
 	 if (file == NULL){
 
-		fprintf(stderr, "Não foi possível abrir o arquivo.(venda)\n");
+		printf(stderr, "Não foi possível abrir o arquivo.(venda)\n");
 		menu();
 	}
 
@@ -1270,9 +1269,7 @@ void salvar_arquivos_venda(){
 
 		}
 
-		fprintf(file," %d |",temp->acoes_venda);
-		fprintf(file," %.2f |",temp->preco_venda);
-		fprintf(file,"\n");
+		fprintf(file," %d | %.2f |\n",temp->acoes_venda, temp->preco_venda);
 		temp = temp->proxima_venda;
 	}
 
@@ -1289,7 +1286,7 @@ void buscar_arquivos_venda(){
 
 	if (file == NULL){
 
-		fprintf(stderr, "\nNão foi possível abrir o arquivo.\n");
+		printf(stderr, "\nNão foi possível abrir o arquivo.\n");
 		menu();
 	}
 
