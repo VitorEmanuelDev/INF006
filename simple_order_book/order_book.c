@@ -1244,8 +1244,7 @@ void salvar_arquivos_venda(){
 
 	struct Venda *temp = cabecote_venda;
 
-	FILE* file;
-	file = fopen ("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/historico_vendas.txt", "w");
+	FILE* file = fopen ("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/historico_vendas.txt", "w");
 
 	 if (file == NULL){
 
@@ -1281,8 +1280,7 @@ void salvar_arquivos_venda(){
 
 void buscar_arquivos_venda(){
 
-	FILE* file;
-	file = fopen("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/historico_vendas.txt","r");
+	FILE* file = fopen("/home/vitor/Desktop/IFBA/INF006-Estrutura-de-Dados/simple_order_book/historico_vendas.txt","r");
 
 	if (file == NULL){
 
